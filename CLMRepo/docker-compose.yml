@@ -1,0 +1,24 @@
+version: '3.1'
+
+services:
+
+    spring_db:
+        image: mongo:4.4.11
+        restart: always
+        volumes:
+          - mongo_db:/data/db
+
+    mikrostoritev:
+        build: .
+        restart: always
+        ports:
+            - 8580:8580
+        environment:
+            - SPRING_PROFILES_ACTIVE=dev
+            - SPRING_DATA_MONGODB_HOST=spring_db
+        depends_on:
+            - spring_db
+
+volumes:
+    mongo_db:
+
