@@ -102,4 +102,5 @@ public class Contact {
                 ", comments=" + comments +
                 '}';
     }
+
 }

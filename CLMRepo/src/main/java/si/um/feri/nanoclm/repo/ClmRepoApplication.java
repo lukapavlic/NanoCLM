@@ -6,7 +6,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import si.um.feri.nanoclm.repo.dao.ContactDao;
+import si.um.feri.nanoclm.repo.dao.TenantDao;
+import si.um.feri.nanoclm.repo.dao.TenantRepository;
 import si.um.feri.nanoclm.repo.dto.PostTenant;
+import si.um.feri.nanoclm.repo.events.producer.JmsProducer;
 import si.um.feri.nanoclm.repo.vao.Contact;
 import si.um.feri.nanoclm.repo.vao.Tenant;
 import java.util.logging.Logger;
@@ -23,6 +26,12 @@ public class ClmRepoApplication implements CommandLineRunner {
 	@Autowired
 	private MongoTemplate dao;
 
+	@Autowired
+	private TenantRepository tenantRepository;
+
+	@Autowired
+	JmsProducer jmsProducer;
+
 	@Override
 	public void run(String... args) throws Exception {
 
@@ -30,28 +39,28 @@ public class ClmRepoApplication implements CommandLineRunner {
 			log.info("Inserting initial demo data...");
 
 			log.info(""+
-				dao.insert(new Tenant(new PostTenant("Inštitut za informatiko","ii",null)))
+				new TenantDao(tenantRepository,jmsProducer).insert(new PostTenant("Inštitut za informatiko","II",null),"INITIAL_DEMO_APP")
 			);
 
 			Contact luka=new Contact("Luka");
-			luka.generateUniqueId("ii");
+			luka.generateUniqueId("II");
 
 			log.info(""+
-				dao.insert(luka,"ii")
+				dao.insert(luka,"II")
 			);
 
-			new ContactDao(dao).deleteContact(luka.getUniqueId(),"ii");
+			new ContactDao(dao,jmsProducer).deleteContact(luka.getUniqueId(),"II","INITIAL_DEMO_APP");
 
-			Contact ana=new Contact("Ana");
-			ana.getAttrs().add("komisija1");
-			ana.getAttrs().add("prijava2022");
-			ana.getProps().put("ime","Ana");
-			ana.getProps().put("priimek","Priimkovič");
-			ana.getComments().put("c1","komentar1");
-			ana.getComments().put("c2","komentar2");
-			ana.generateUniqueId("ii");
+			Contact tilen=new Contact("Tilen");
+			tilen.getAttrs().add("komisija1");
+			tilen.getAttrs().add("prijava2022");
+			tilen.getProps().put("ime","Tilen");
+			tilen.getProps().put("letnikStudija","3");
+			tilen.getComments().put("c1","komentar1");
+			tilen.getComments().put("c2","komentar2");
+			tilen.generateUniqueId("ii");
 			log.info(""+
-				dao.insert(ana,"ii")
+				dao.insert(tilen,"II")
 			);
 
 			log.info("Done inserting initial demo data...");

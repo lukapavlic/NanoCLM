@@ -1,4 +1,4 @@
-package si.um.feri.nanoclm.repo.dao;
+package si.um.feri.nanoclm.repo;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import java.util.logging.Logger;
 
 @Configuration
 public class MongoConfig {
+
+    private static final Logger log = Logger.getLogger(MongoConfig.class.toString());
 
     @Value("${spring.data.mongodb.host}")
     private String host;
@@ -23,6 +26,7 @@ public class MongoConfig {
 
     @Bean
     public MongoClient mongo() {
+        log.info("Connectiong to MongoDB: "+"mongodb://"+host+":"+port+"/"+database);
         ConnectionString connectionString = new ConnectionString("mongodb://"+host+":"+port+"/"+database);
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder().applyConnectionString(connectionString).build();
         return MongoClients.create(mongoClientSettings);

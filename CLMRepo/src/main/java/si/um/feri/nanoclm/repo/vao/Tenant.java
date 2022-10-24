@@ -9,6 +9,7 @@ import java.util.Set;
 /**
  * A tenant (client) has a separate set of contacts; client is operated by a set of users
  * Unique name is used to separate contacts into separate document collections
+ * Unique name should be **UPPERCASE** - for case-insentitive searches
  */
 @Document("tenants")
 public class Tenant {
@@ -23,7 +24,7 @@ public class Tenant {
     public Tenant(PostTenant pc) {
         mongoId =null;
         title=pc.title();
-        tenantUniqueName=pc.uniqueName();
+        tenantUniqueName=pc.uniqueName().toUpperCase();
         if (pc.allowedUsers()!=null)
             getAllowedUsers().addAll(pc.allowedUsers());
     }

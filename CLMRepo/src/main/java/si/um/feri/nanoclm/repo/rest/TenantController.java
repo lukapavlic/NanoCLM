@@ -4,13 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import si.um.feri.nanoclm.repo.dao.TenantDao;
 import si.um.feri.nanoclm.repo.dao.TenantRepository;
 import si.um.feri.nanoclm.repo.dto.PostTenant;
-import si.um.feri.nanoclm.repo.events.Event;
-import si.um.feri.nanoclm.repo.events.EventNotifier;
-import si.um.feri.nanoclm.repo.events.EventType;
+import si.um.feri.nanoclm.repo.events.producer.JmsProducer;
 import si.um.feri.nanoclm.repo.vao.Tenant;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -22,30 +20,31 @@ public class TenantController {
 	private static final Logger log = Logger.getLogger(TenantController.class.toString());
 
 	@Autowired
-	private TenantRepository dao;
+	private TenantRepository repo;
+
+	@Autowired
+	JmsProducer jmsProducer;
 	
 	@PostMapping
 	public ResponseEntity<Tenant> post(@RequestBody PostTenant pc) {
-		Tenant ret=dao.insert(new Tenant(pc));
-		log.info("A new tenant is inserted: "+ret);
-		EventNotifier.getInstance().notify(new Event(
-				null,
-				pc.uniqueName(),null,
-				EventType.TENANT_CREATED,
-				LocalDateTime.now(),
-				null,
-				ret.toString()));
+		TenantDao dao=new TenantDao(repo,jmsProducer);
+		Tenant ret=null;
+		try {
+			ret=dao.insert(pc,null);
+		} catch (TenantDao.TenantUniqueNameNotAllowedException e) {
+			return new ResponseEntity("entity-unique-name-not-allowed", HttpStatus.NOT_ACCEPTABLE);
+		}
 	    return ResponseEntity.ok(ret);
 	}
 
 	@GetMapping
 	public @ResponseBody Iterable<Tenant> getAll() {
-		return dao.findAll();
+		return repo.findAll();
 	}
 
 	@GetMapping("/{id}")
 	public @ResponseBody ResponseEntity<Tenant> getById(@PathVariable("id") String id) {
-		Optional<Tenant> ret=dao.findByTenantUniqueName(id);
+		Optional<Tenant> ret=repo.findByTenantUniqueName(id.toUpperCase());
 		if (ret.isEmpty()) return new ResponseEntity("entity-not-found", HttpStatus.NOT_ACCEPTABLE);
 		return ResponseEntity.ok(ret.get());
 	}

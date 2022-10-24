@@ -2,23 +2,32 @@ version: '3.1'
 
 services:
 
-    spring_db:
+    springdb:
         image: mongo:4.4.11
         restart: always
         volumes:
-          - mongo_db:/data/db
+          - mongodbvol:/data/db
 
-    mikrostoritev:
+    clmamq:
+        image: rmohr/activemq:5.15.9
+        restart: always
+        ports:
+            - "8161:8161"
+            - "61616:61616"
+
+    clmrepo:
         build: .
         restart: always
         ports:
-            - 8580:8580
+            - "8580:8580"
         environment:
             - SPRING_PROFILES_ACTIVE=dev
-            - SPRING_DATA_MONGODB_HOST=spring_db
+            - SPRING_DATA_MONGODB_HOST=springdb
+            - ACTIVEMQ_BROKER-IP=clmamq
         depends_on:
-            - spring_db
+            - clmamq
+            - springdb
 
 volumes:
-    mongo_db:
+    mongodbvol:
 
