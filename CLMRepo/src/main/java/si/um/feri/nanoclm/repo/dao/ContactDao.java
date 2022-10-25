@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import si.um.feri.nanoclm.repo.events.Event;
 import si.um.feri.nanoclm.repo.events.EventType;
-import si.um.feri.nanoclm.repo.events.producer.JmsProducer;
+import si.um.feri.nanoclm.repo.events.producer.EventNotifyer;
 import si.um.feri.nanoclm.repo.vao.Contact;
 import java.time.LocalDateTime;
 import java.util.logging.Logger;
@@ -14,14 +14,14 @@ public class ContactDao {
 
     private static final Logger log = Logger.getLogger(ContactDao.class.toString());
 
-    public ContactDao(MongoTemplate dao, JmsProducer jmsProducer) {
-        this.jmsProducer=jmsProducer;
+    public ContactDao(MongoTemplate dao, EventNotifyer eventNotifyer) {
+        this.eventNotifyer = eventNotifyer;
         this.dao = dao;
     }
 
     private MongoTemplate dao;
 
-    private JmsProducer jmsProducer;
+    private EventNotifyer eventNotifyer;
 
     /**
      * We do not actually delete - we move document to "deleted" collection
@@ -38,7 +38,7 @@ public class ContactDao {
         dao.remove(q,tenantUniqueName);
         log.info("A contact was removed from "+tenantUniqueName+":"+contactUniqueId+" - "+val.getTitle());
         //log
-        jmsProducer.sendMessage(new Event(
+        eventNotifyer.notify(new Event(
                 actingUser,
                 tenantUniqueName,
                 contactUniqueId,

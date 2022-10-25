@@ -13,7 +13,7 @@ import si.um.feri.nanoclm.repo.dto.PostContact;
 import si.um.feri.nanoclm.repo.dto.PostProp;
 import si.um.feri.nanoclm.repo.events.Event;
 import si.um.feri.nanoclm.repo.events.EventType;
-import si.um.feri.nanoclm.repo.events.producer.JmsProducer;
+import si.um.feri.nanoclm.repo.events.producer.EventNotifyer;
 import si.um.feri.nanoclm.repo.vao.Tenant;
 import si.um.feri.nanoclm.repo.vao.Contact;
 import java.time.LocalDateTime;
@@ -35,7 +35,7 @@ public class ContactController {
 	private TenantRepository tenantDao;
 
 	@Autowired
-	JmsProducer jmsProducer;
+	EventNotifyer eventNotifyer;
 
 	@PostMapping()
 	public ResponseEntity<Contact> post(@RequestHeader("tenantUniqueName")String tenantUniqueNameIn, @RequestBody PostContact pc) {
@@ -49,7 +49,7 @@ public class ContactController {
 		ret=dao.insert(ret,tenantUniqueName);
 		log.info("A new contact created into "+tenantUniqueName+":"+ret);
 		//log
-		jmsProducer.sendMessage(new Event(
+		eventNotifyer.notify(new Event(
 				null,
 				tenantUniqueName,
 				ret.getUniqueId(),
@@ -74,7 +74,7 @@ public class ContactController {
 		dao.save(val,tenantUniqueName);
 		log.info("A new contact property set into "+tenantUniqueName+":"+val.getTitle()+"-"+pp.name());
 		//log
-		jmsProducer.sendMessage(new Event(
+		eventNotifyer.notify(new Event(
 				null,
 				tenantUniqueName,
 				val.getUniqueId(),
@@ -93,19 +93,44 @@ public class ContactController {
 		Query q=new Query(Criteria.where("uniqueId").is(id));
 		Contact val=dao.findOne(q, Contact.class,tenantUniqueName);
 		if (val==null) return new ResponseEntity("entity-not-found", HttpStatus.NOT_ACCEPTABLE);
-		//put prop
+		//put attribute
 		String old=val.toString();
 		val.getAttrs().add(attr);
 		dao.save(val,tenantUniqueName);
 		log.info("A new contact attribute set into "+tenantUniqueName+":"+val.getTitle()+"-"+attr);
 		//log
-		jmsProducer.sendMessage(new Event(
+		eventNotifyer.notify(new Event(
 				null,
 				tenantUniqueName,
 				val.getUniqueId(),
 				EventType.ATTRIBUTE_SET,
 				LocalDateTime.now(),
 				attr,
+				old,
+				val.toString()));
+		return ResponseEntity.ok(val);
+	}
+
+	@PostMapping("/{id}/comments")
+	public ResponseEntity<Contact> postCommentToContact(@RequestHeader("tenantUniqueName")String tenantUniqueNameIn, @PathVariable("id") String id, @RequestHeader("user") String user,@RequestBody String comment) {
+		String tenantUniqueName=tenantUniqueNameIn.toUpperCase();
+		//verify
+		Query q=new Query(Criteria.where("uniqueId").is(id));
+		Contact val=dao.findOne(q, Contact.class,tenantUniqueName);
+		if (val==null) return new ResponseEntity("entity-not-found", HttpStatus.NOT_ACCEPTABLE);
+		//put comment
+		String old=val.toString();
+		val.getComments().put(user,comment);
+		dao.save(val,tenantUniqueName);
+		log.info("A new comment in "+tenantUniqueName+":"+val.getTitle()+"-"+comment);
+		//log
+		eventNotifyer.notify(new Event(
+				user,
+				tenantUniqueName,
+				val.getUniqueId(),
+				EventType.COMMENT_SET,
+				LocalDateTime.now(),
+				comment,
 				old,
 				val.toString()));
 		return ResponseEntity.ok(val);
@@ -120,13 +145,15 @@ public class ContactController {
 		Contact val=dao.findOne(q, Contact.class,tenantUniqueName);
 		if (val==null) return new ResponseEntity("entity-not-found", HttpStatus.NOT_ACCEPTABLE);
 		//delete
-		new ContactDao(dao,jmsProducer).deleteContact(id,tenantUniqueName,null);
+		new ContactDao(dao, eventNotifyer).deleteContact(id,tenantUniqueName,null);
 
 	    return ResponseEntity.ok("Deleted");
 	}
 
 	@GetMapping()
 	public @ResponseBody List<Contact> getAll(@RequestHeader("tenantUniqueName")String tenantUniqueNameIn) {
+		//TODO pagination
+		//TODO only main-screen data?
 		return  dao.findAll(Contact.class, tenantUniqueNameIn.toUpperCase());
 	}
 

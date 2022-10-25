@@ -9,9 +9,9 @@ import si.um.feri.nanoclm.repo.dao.ContactDao;
 import si.um.feri.nanoclm.repo.dao.TenantDao;
 import si.um.feri.nanoclm.repo.dao.TenantRepository;
 import si.um.feri.nanoclm.repo.dto.PostTenant;
-import si.um.feri.nanoclm.repo.events.producer.JmsProducer;
+import si.um.feri.nanoclm.repo.events.producer.EventNotifyer;
 import si.um.feri.nanoclm.repo.vao.Contact;
-import si.um.feri.nanoclm.repo.vao.Tenant;
+
 import java.util.logging.Logger;
 
 @SpringBootApplication
@@ -30,7 +30,7 @@ public class ClmRepoApplication implements CommandLineRunner {
 	private TenantRepository tenantRepository;
 
 	@Autowired
-	JmsProducer jmsProducer;
+	EventNotifyer eventNotifyer;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -39,7 +39,7 @@ public class ClmRepoApplication implements CommandLineRunner {
 			log.info("Inserting initial demo data...");
 
 			log.info(""+
-				new TenantDao(tenantRepository,jmsProducer).insert(new PostTenant("Inštitut za informatiko","II",null),"INITIAL_DEMO_APP")
+				new TenantDao(tenantRepository, eventNotifyer).insert(new PostTenant("Inštitut za informatiko","II",null),"INITIAL_DEMO_APP")
 			);
 
 			Contact luka=new Contact("Luka");
@@ -49,7 +49,7 @@ public class ClmRepoApplication implements CommandLineRunner {
 				dao.insert(luka,"II")
 			);
 
-			new ContactDao(dao,jmsProducer).deleteContact(luka.getUniqueId(),"II","INITIAL_DEMO_APP");
+			new ContactDao(dao, eventNotifyer).deleteContact(luka.getUniqueId(),"II","INITIAL_DEMO_APP");
 
 			Contact tilen=new Contact("Tilen");
 			tilen.getAttrs().add("komisija1");

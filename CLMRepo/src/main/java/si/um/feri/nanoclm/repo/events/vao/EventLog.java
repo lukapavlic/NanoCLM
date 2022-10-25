@@ -4,13 +4,14 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import si.um.feri.nanoclm.repo.events.Event;
 import si.um.feri.nanoclm.repo.events.EventType;
+import si.um.feri.nanoclm.repo.events.dto.GetEventSimpleMode;
+
 import java.time.LocalDateTime;
 
 @Document("eventlog")
 public class EventLog {
 
     public EventLog() {
-
     }
 
     public EventLog(Event e) {
@@ -22,6 +23,17 @@ public class EventLog {
         setOldContent(e.oldContent());
         setNewContent(e.newContent());
         setRelatedContent(e.relatedContent());
+    }
+
+    public GetEventSimpleMode toGetEventSimpleMode() {
+        return new GetEventSimpleMode(
+                mongoId,
+                user,
+                contactUniqueId,
+                eventType,
+                timestamp,
+                relatedContent
+        );
     }
 
     @Id

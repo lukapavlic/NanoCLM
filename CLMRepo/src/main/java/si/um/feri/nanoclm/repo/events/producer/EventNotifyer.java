@@ -10,9 +10,9 @@ import javax.jms.MapMessage;
 import java.util.logging.Logger;
 
 @Component
-public class JmsProducer {
+public class EventNotifyer {
 
-    private static final Logger log = Logger.getLogger(JmsProducer.class.toString());
+    private static final Logger log = Logger.getLogger(EventNotifyer.class.toString());
 
     @Autowired
     JmsTemplate jmsTemplate;
@@ -20,7 +20,7 @@ public class JmsProducer {
     @Value("${active-mq.topic}")
     private String dest;
 
-    public void sendMessage(Event msg){
+    public void notify(Event msg){
         try{
             log.info("Sending to topic "+ dest+"...");
             //jmsTemplate.send(dest,s -> s.createObjectMessage(msg));

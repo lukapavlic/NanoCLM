@@ -3,7 +3,7 @@ package si.um.feri.nanoclm.repo.dao;
 import si.um.feri.nanoclm.repo.dto.PostTenant;
 import si.um.feri.nanoclm.repo.events.Event;
 import si.um.feri.nanoclm.repo.events.EventType;
-import si.um.feri.nanoclm.repo.events.producer.JmsProducer;
+import si.um.feri.nanoclm.repo.events.producer.EventNotifyer;
 import si.um.feri.nanoclm.repo.vao.Tenant;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -17,14 +17,14 @@ public class TenantDao {
 
     public static Set TENANT_UNIQUE_NAME_BLACK_LIST=Set.of("EVENTLOG","TENANTS");
 
-    public TenantDao(TenantRepository repo, JmsProducer jmsProducer) {
+    public TenantDao(TenantRepository repo, EventNotifyer eventNotifyer) {
         this.repo = repo;
-        this.jmsProducer = jmsProducer;
+        this.eventNotifyer = eventNotifyer;
     }
 
     private TenantRepository repo;
 
-    private JmsProducer jmsProducer;
+    private EventNotifyer eventNotifyer;
 
     public Tenant insert(PostTenant pc, String actingUser) throws TenantUniqueNameNotAllowedException {
         //check blacklist
@@ -38,7 +38,7 @@ public class TenantDao {
         Tenant ret=repo.insert(new Tenant(pc));
         log.info("A new tenant is inserted: "+ret);
         //log
-        jmsProducer.sendMessage(new Event(
+        eventNotifyer.notify(new Event(
                 actingUser,
                 pc.uniqueName(),null,
                 EventType.TENANT_CREATED,
