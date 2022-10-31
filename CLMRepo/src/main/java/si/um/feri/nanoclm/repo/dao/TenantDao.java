@@ -15,7 +15,8 @@ public class TenantDao {
     private static final Logger log = Logger.getLogger(TenantDao.class.toString());
     public class TenantUniqueNameNotAllowedException extends Exception {}
 
-    public static Set TENANT_UNIQUE_NAME_BLACK_LIST=Set.of("EVENTLOG","TENANTS");
+    public static final Set TENANT_UNIQUE_NAME_BLACK_LIST=Set.of("EVENTLOG","TENANTS");
+    public static final String DELETED_APPENDIX="_DELETED";
 
     public TenantDao(TenantRepository repo, EventNotifyer eventNotifyer) {
         this.repo = repo;
@@ -33,17 +34,17 @@ public class TenantDao {
         //find
         Optional<Tenant> te=repo.findByTenantUniqueName(pc.uniqueName().toUpperCase());
         if (!te.isEmpty()) throw new TenantUniqueNameNotAllowedException();
-        if (pc.uniqueName().toUpperCase().endsWith("DELETED"))  throw new TenantUniqueNameNotAllowedException();
+        if (pc.uniqueName().toUpperCase().endsWith(DELETED_APPENDIX))  throw new TenantUniqueNameNotAllowedException();
         //store
         Tenant ret=repo.insert(new Tenant(pc));
-        log.info("A new tenant is inserted: "+ret);
+        log.info(() -> "A new tenant is inserted: "+ret);
         //log
         eventNotifyer.notify(new Event(
                 actingUser,
                 pc.uniqueName(),null,
                 EventType.TENANT_CREATED,
                 LocalDateTime.now(),
-                null,
+                ret.getTenantUniqueName(),
                 null,
                 ret.toString()));
         return ret;

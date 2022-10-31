@@ -22,19 +22,18 @@ public class EventNotifyer {
 
     public void notify(Event msg){
         try{
-            log.info("Sending to topic "+ dest+"...");
-            //jmsTemplate.send(dest,s -> s.createObjectMessage(msg));
             jmsTemplate.send(dest,s -> {
+                log.info(() -> "Sending to topic "+ dest+"..."+msg.relatedContent());
                 MapMessage mm=s.createMapMessage();
                 try {
                     EventConverter.populateMapMessage(msg,mm);
                 } catch (Exception e) {
-                    log.info("sendMessage Error: "+e);
+                    log.info(() -> "sendMessage Error: "+e);
                 }
                 return mm;
             });
         } catch(Exception e){
-            log.info("sendMessage Exception: "+ e.getMessage());
+            log.info(() -> "sendMessage Exception: "+ e.getMessage());
         }
     }
 

@@ -50,7 +50,7 @@ public class TenantController {
 		String old=te.toString();
 		te.get().getAllowedUsers().add(userName);
 		repo.save(te.get());
-		log.info("A new tenant allowance inserted: "+userName+" for "+tenantUniqueName);
+		log.info(() -> "A new tenant allowance inserted: "+userName+" for "+tenantUniqueName);
 		//log
 		eventNotifyer.notify(new Event(
 				null,
@@ -74,7 +74,7 @@ public class TenantController {
 		String old=te.toString();
 		te.get().getAllowedUsers().remove(userName);
 		repo.save(te.get());
-		log.info("A tenant allowance revoked: "+userName+" for "+tenantUniqueName);
+		log.info(() -> "A tenant allowance revoked: "+userName+" for "+tenantUniqueName);
 		//log
 		eventNotifyer.notify(new Event(
 				null,

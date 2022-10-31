@@ -11,7 +11,6 @@ import si.um.feri.nanoclm.repo.dao.TenantRepository;
 import si.um.feri.nanoclm.repo.dto.PostTenant;
 import si.um.feri.nanoclm.repo.events.producer.EventNotifyer;
 import si.um.feri.nanoclm.repo.vao.Contact;
-
 import java.util.logging.Logger;
 
 @SpringBootApplication
@@ -36,16 +35,27 @@ public class ClmRepoApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 
 		if (!dao.collectionExists("tenants")) {
-			log.info("Inserting initial demo data...");
+			log.info( () -> "Inserting initial demo data...");
 
-			log.info(""+
-				new TenantDao(tenantRepository, eventNotifyer).insert(new PostTenant("Inštitut za informatiko","II",null),"INITIAL_DEMO_APP")
+			log.info(() -> {
+						try {
+							return ""+
+								new TenantDao(tenantRepository, eventNotifyer).insert(
+										new PostTenant(
+												"Inštitut za informatiko",
+												"II",
+												null),
+										"INITIAL_DEMO_APP");
+						} catch (TenantDao.TenantUniqueNameNotAllowedException e) {
+							return e.getMessage();
+						}
+					}
 			);
 
 			Contact luka=new Contact("Luka");
 			luka.generateUniqueId("II");
 
-			log.info(""+
+			log.info(() -> ""+
 				dao.insert(luka,"II")
 			);
 
@@ -59,11 +69,11 @@ public class ClmRepoApplication implements CommandLineRunner {
 			tilen.getComments().put("c1","komentar1");
 			tilen.getComments().put("c2","komentar2");
 			tilen.generateUniqueId("ii");
-			log.info(""+
+			log.info(() -> ""+
 				dao.insert(tilen,"II")
 			);
 
-			log.info("Done inserting initial demo data...");
+			log.info(() -> "Done inserting initial demo data...");
 		}
 
 	}

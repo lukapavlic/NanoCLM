@@ -26,14 +26,14 @@ public class MongoConfig {
 
     @Bean
     public MongoClient mongo() {
-        log.info("Connectiong to MongoDB: "+"mongodb://"+host+":"+port+"/"+database);
+        log.info(() -> "Connectiong to MongoDB: "+"mongodb://"+host+":"+port+"/"+database);
         ConnectionString connectionString = new ConnectionString("mongodb://"+host+":"+port+"/"+database);
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder().applyConnectionString(connectionString).build();
         return MongoClients.create(mongoClientSettings);
     }
 
     @Bean
-    public MongoTemplate mongoTemplate() throws Exception {
+    public MongoTemplate mongoTemplate() {
         return new MongoTemplate(mongo(), database);
     }
 

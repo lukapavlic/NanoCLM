@@ -12,18 +12,4 @@ public record Event (
         String relatedContent,
         String oldContent,
         String newContent
-        ) implements Serializable {
-    @Override
-    public String toString() {
-        return "Event{" +
-                "user='" + user + '\'' +
-                ", tenantUniqueName='" + tenantUniqueName + '\'' +
-                ", contactUniqueId='" + contactUniqueId + '\'' +
-                ", eventType=" + eventType +
-                ", timestamp=" + timestamp +
-                ", oldContent='" + oldContent + '\'' +
-                ", relatedContent='" + relatedContent + '\'' +
-                ", newContent='" + newContent + '\'' +
-                '}';
-    }
-}
+        ) { }

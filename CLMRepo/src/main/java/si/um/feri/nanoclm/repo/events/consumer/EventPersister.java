@@ -22,14 +22,12 @@ public class EventPersister implements MessageListener {
     @Override
     @JmsListener(destination = "${active-mq.topic}")
     public void onMessage(Message message) {
-        log.info("Received in EventPersister: "+message);
+        log.info(() -> "Received in EventPersister: "+message);
         try {
-//            ObjectMessage om=(ObjectMessage)message;
-//            Event e=(Event)om.getObject();
             MapMessage mm=(MapMessage)message;
             dao.save(new EventLog(EventConverter.fromMapMessage(mm)));
         } catch (Exception e) {
-            log.info("onMessage Exception:"+e+"; mgs:"+message);
+            log.info(() -> "onMessage Exception:"+e+"; mgs:"+message);
         }
     }
 

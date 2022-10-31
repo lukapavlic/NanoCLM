@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
 import javax.jms.ConnectionFactory;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Configuration
@@ -23,9 +24,9 @@ public class ActiveMQConfig {
     @Bean
     public ConnectionFactory connectionFactory(){
         ActiveMQConnectionFactory activeMQConnectionFactory  = new ActiveMQConnectionFactory();
-        log.info("Connectiong to AMQ: "+"tcp://"+brokerIp+":"+brokerPort);
+        log.info(() -> "Connecting to AMQ: "+"tcp://"+brokerIp+":"+brokerPort);
         activeMQConnectionFactory.setBrokerURL("tcp://"+brokerIp+":"+brokerPort);
-        //activeMQConnectionFactory.setTrustedPackages(List.of("si.um.feri.nanoclm.repo.events","java.time"));
+        activeMQConnectionFactory.setTrustedPackages(List.of());
         return activeMQConnectionFactory;
     }
 

@@ -33,10 +33,10 @@ public class ContactDao {
         if (val==null) return;
         //delete
         val.setMongoId(null);
-        val=dao.insert(val,tenantUniqueName+"_deleted");
-        log.info("A contact was moved to "+tenantUniqueName+"_deleted:"+val);
+        final Contact valNew=dao.insert(val,tenantUniqueName+TenantDao.DELETED_APPENDIX);
+        log.info(() -> "A contact was moved to "+tenantUniqueName+TenantDao.DELETED_APPENDIX+":"+valNew);
         dao.remove(q,tenantUniqueName);
-        log.info("A contact was removed from "+tenantUniqueName+":"+contactUniqueId+" - "+val.getTitle());
+        log.info(() -> "A contact was removed from "+tenantUniqueName+":"+contactUniqueId+" - "+valNew.getTitle());
         //log
         eventNotifyer.notify(new Event(
                 actingUser,

@@ -5,7 +5,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import si.um.feri.nanoclm.repo.events.Event;
 import si.um.feri.nanoclm.repo.events.EventType;
 import si.um.feri.nanoclm.repo.events.dto.GetEventSimpleMode;
-
 import java.time.LocalDateTime;
 
 @Document("eventlog")

@@ -46,8 +46,8 @@ public class ContactController {
 		//insert
 		Contact ret=new Contact(pc);
 		ret.generateUniqueId(tenantUniqueName);
-		ret=dao.insert(ret,tenantUniqueName);
-		log.info("A new contact created into "+tenantUniqueName+":"+ret);
+		final Contact retFinal=dao.insert(ret,tenantUniqueName);
+		log.info(() -> "A new contact created into "+tenantUniqueName+":"+retFinal);
 		//log
 		eventNotifyer.notify(new Event(
 				null,
@@ -58,7 +58,7 @@ public class ContactController {
 				null,
 				null,
 				ret.toString()));
-	    return ResponseEntity.ok(ret);
+	    return ResponseEntity.ok(retFinal);
 	}
 
 	@PostMapping("/{id}/props")
@@ -72,7 +72,7 @@ public class ContactController {
 		String old=val.toString();
 		val.getProps().put(pp.name(),pp.value());
 		dao.save(val,tenantUniqueName);
-		log.info("A new contact property set into "+tenantUniqueName+":"+val.getTitle()+"-"+pp.name());
+		log.info(() -> "A new contact property set into "+tenantUniqueName+":"+val.getTitle()+"-"+pp.name());
 		//log
 		eventNotifyer.notify(new Event(
 				null,
@@ -97,7 +97,7 @@ public class ContactController {
 		String old=val.toString();
 		val.getAttrs().add(attr);
 		dao.save(val,tenantUniqueName);
-		log.info("A new contact attribute set into "+tenantUniqueName+":"+val.getTitle()+"-"+attr);
+		log.info(() -> "A new contact attribute set into "+tenantUniqueName+":"+val.getTitle()+"-"+attr);
 		//log
 		eventNotifyer.notify(new Event(
 				null,
@@ -120,9 +120,9 @@ public class ContactController {
 		if (val==null) return new ResponseEntity("entity-not-found", HttpStatus.NOT_ACCEPTABLE);
 		//put comment
 		String old=val.toString();
-		val.getComments().put(user,comment);
+		val.getComments().put(user+System.currentTimeMillis(),comment);
 		dao.save(val,tenantUniqueName);
-		log.info("A new comment in "+tenantUniqueName+":"+val.getTitle()+"-"+comment);
+		log.info(() -> "A new comment in "+tenantUniqueName+":"+val.getTitle()+"-"+comment);
 		//log
 		eventNotifyer.notify(new Event(
 				user,
@@ -135,7 +135,6 @@ public class ContactController {
 				val.toString()));
 		return ResponseEntity.ok(val);
 	}
-
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@RequestHeader("tenantUniqueName")String tenantUniqueNameIn,@PathVariable("id") String id) {

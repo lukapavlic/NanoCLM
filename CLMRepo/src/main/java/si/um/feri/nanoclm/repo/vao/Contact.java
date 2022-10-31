@@ -25,11 +25,11 @@ public class Contact {
         this.title = title;
     }
 
-    private static Random rand=new Random();
+    private final static Random rand=new Random();
 
-    public void generateUniqueId(String belongingToTenant) {
-        //TODO improve this
-        setUniqueId(belongingToTenant+"-"+getTitle().hashCode()+"-"+rand.nextInt(1000));
+    public String generateUniqueId(String belongingToTenant) {
+        setUniqueId(belongingToTenant+"-"+System.nanoTime()+"-"+rand.nextInt(10_000));
+        return uniqueId;
     }
 
     @Id

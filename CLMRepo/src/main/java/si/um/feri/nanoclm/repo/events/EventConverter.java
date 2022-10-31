@@ -1,14 +1,15 @@
 package si.um.feri.nanoclm.repo.events;
 
+import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.TimeZone;
 
-public class EventConverter {
+public interface EventConverter {
 
-    public static void populateMapMessage(Event e,MapMessage mm) throws Exception {
+    static void populateMapMessage(Event e,MapMessage mm) throws JMSException {
         mm.setString("user",e.user());
         mm.setString("tenantUniqueName",e.tenantUniqueName());
         mm.setString("contactUniqueId",e.contactUniqueId());
@@ -19,7 +20,7 @@ public class EventConverter {
         mm.setString("newContent",e.newContent());
     }
 
-    public static Event fromMapMessage(MapMessage mm) throws Exception {
+    static Event fromMapMessage(MapMessage mm) throws JMSException {
         return new Event(
             mm.getString("user"),
             mm.getString("tenantUniqueName"),
