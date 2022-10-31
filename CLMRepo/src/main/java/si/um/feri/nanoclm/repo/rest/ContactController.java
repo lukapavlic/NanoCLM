@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import si.um.feri.nanoclm.repo.dao.ContactDao;
@@ -42,7 +41,7 @@ public class ContactController {
 		String tenantUniqueName=tenantUniqueNameIn.toUpperCase();
 		//verify
 		Optional<Tenant> client= tenantDao.findByTenantUniqueName(tenantUniqueName);
-		if (client.isEmpty()) return new ResponseEntity("entity-not-found", HttpStatus.NOT_ACCEPTABLE);
+		if (client.isEmpty()) return ResponseEntity.notFound().build();
 		//insert
 		Contact ret=new Contact(pc);
 		ret.generateUniqueId(tenantUniqueName);
@@ -67,7 +66,7 @@ public class ContactController {
 		//verify
 		Query q=new Query(Criteria.where("uniqueId").is(id));
 		Contact val=dao.findOne(q, Contact.class,tenantUniqueName);
-		if (val==null) return new ResponseEntity("entity-not-found", HttpStatus.NOT_ACCEPTABLE);
+		if (val==null) return ResponseEntity.notFound().build();
 		//put prop
 		String old=val.toString();
 		val.getProps().put(pp.name(),pp.value());
@@ -92,7 +91,7 @@ public class ContactController {
 		//verify
 		Query q=new Query(Criteria.where("uniqueId").is(id));
 		Contact val=dao.findOne(q, Contact.class,tenantUniqueName);
-		if (val==null) return new ResponseEntity("entity-not-found", HttpStatus.NOT_ACCEPTABLE);
+		if (val==null) return ResponseEntity.notFound().build();
 		//put attribute
 		String old=val.toString();
 		val.getAttrs().add(attr);
@@ -117,7 +116,7 @@ public class ContactController {
 		//verify
 		Query q=new Query(Criteria.where("uniqueId").is(id));
 		Contact val=dao.findOne(q, Contact.class,tenantUniqueName);
-		if (val==null) return new ResponseEntity("entity-not-found", HttpStatus.NOT_ACCEPTABLE);
+		if (val==null) return ResponseEntity.notFound().build();
 		//put comment
 		String old=val.toString();
 		val.getComments().put(user+System.currentTimeMillis(),comment);
@@ -142,7 +141,7 @@ public class ContactController {
 		//verify
 		Query q=new Query(Criteria.where("uniqueId").is(id));
 		Contact val=dao.findOne(q, Contact.class,tenantUniqueName);
-		if (val==null) return new ResponseEntity("entity-not-found", HttpStatus.NOT_ACCEPTABLE);
+		if (val==null) return ResponseEntity.notFound().build();
 		//delete
 		new ContactDao(dao, eventNotifyer).deleteContact(id,tenantUniqueName,null);
 
@@ -151,8 +150,6 @@ public class ContactController {
 
 	@GetMapping()
 	public @ResponseBody List<Contact> getAll(@RequestHeader("tenantUniqueName")String tenantUniqueNameIn) {
-		//TODO pagination
-		//TODO only main-screen data?
 		return  dao.findAll(Contact.class, tenantUniqueNameIn.toUpperCase());
 	}
 

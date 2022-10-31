@@ -1,5 +1,7 @@
 package si.um.feri.nanoclm.repo.events;
 
+import org.awaitility.Awaitility;
+import org.awaitility.Duration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +24,7 @@ import java.util.logging.Logger;
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class EventLogTests {
+class EventLogTests {
 
     private static final Logger log = Logger.getLogger(EventLogTests.class.toString());
 
@@ -61,12 +63,9 @@ public class EventLogTests {
     @Test
     void insertTenantCheckLog() throws TenantDao.TenantUniqueNameNotAllowedException, InterruptedException {
 
-        //wait max 1 sec in order that messages are delivered & considered
-        int timeOuts=5;
-        while (logRepo.count()==0 && timeOuts--!=0) {
-            Thread.sleep(200);
-            log.info("--WAITING-- for messages");
-        }
+        Awaitility.await().atMost(Duration.ONE_SECOND).until(()->{
+            return logRepo.count()>0;
+        });
 
         Assertions.assertEquals(1,logRepo.count());
         EventLog evt=logRepo.findAll().get(0);
@@ -81,12 +80,9 @@ public class EventLogTests {
         ContactDao dao = new ContactDao(mongoTemplate, eventNotifyer);
         dao.deleteContact(johnContact.getUniqueId(),"TENANT","my@company.com");
 
-        //wait max 1 sec in order that messages are delivered & considered
-        int timeOuts=5;
-        while (logRepo.count()<2 && timeOuts--!=0) {
-            Thread.sleep(200);
-            log.info("--WAITING-- for messages");
-        }
+        Awaitility.await().atMost(Duration.ONE_SECOND).until(()->{
+            return logRepo.count()==2;
+        });
 
         //first for tenant, second for deleted contact
         Assertions.assertEquals(2,logRepo.count());

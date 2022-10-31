@@ -30,8 +30,8 @@ public class EventLogBrowserController {
 	public @ResponseBody ResponseEntity<EventLog> getEventById(@RequestHeader("tenantUniqueName")String tenantUniqueNameIn, @PathVariable("eventId") String eventId) {
 		String tenantUniqueName=tenantUniqueNameIn.toUpperCase();
 		Optional<EventLog> opt=repo.findById(eventId);
-		if (opt.isEmpty()) return new ResponseEntity("entity-not-found", HttpStatus.NOT_ACCEPTABLE);
-		if (!opt.get().getTenantUniqueName().equals(tenantUniqueName)) return new ResponseEntity("not-allowed", HttpStatus.NOT_ACCEPTABLE);
+		if (opt.isEmpty()) return ResponseEntity.notFound().build();
+		if (!opt.get().getTenantUniqueName().equals(tenantUniqueName)) return ResponseEntity.status(405).build(); //not allowed
 		return ResponseEntity.ok(opt.get());
 	}
 

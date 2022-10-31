@@ -45,7 +45,7 @@ public class TenantController {
 		String tenantUniqueName=tenantUniqueNameIn.toUpperCase();
 		//verify
 		Optional<Tenant> te=repo.findByTenantUniqueName(tenantUniqueName);
-		if (te.isEmpty()) return new ResponseEntity("entity-not-found", HttpStatus.NOT_ACCEPTABLE);
+		if (te.isEmpty()) return ResponseEntity.notFound().build();
 		//store
 		String old=te.toString();
 		te.get().getAllowedUsers().add(userName);
@@ -69,7 +69,7 @@ public class TenantController {
 		String tenantUniqueName=tenantUniqueNameIn.toUpperCase();
 		//verify
 		Optional<Tenant> te=repo.findByTenantUniqueName(tenantUniqueName);
-		if (te.isEmpty()) return new ResponseEntity("entity-not-found", HttpStatus.NOT_ACCEPTABLE);
+		if (te.isEmpty()) return ResponseEntity.notFound().build();
 		//store
 		String old=te.toString();
 		te.get().getAllowedUsers().remove(userName);
@@ -96,7 +96,7 @@ public class TenantController {
 	@GetMapping("/{id}")
 	public @ResponseBody ResponseEntity<Tenant> getById(@PathVariable("id") String id) {
 		Optional<Tenant> ret=repo.findByTenantUniqueName(id.toUpperCase());
-		if (ret.isEmpty()) return new ResponseEntity("entity-not-found", HttpStatus.NOT_ACCEPTABLE);
+		if (ret.isEmpty()) return ResponseEntity.notFound().build();
 		return ResponseEntity.ok(ret.get());
 	}
 

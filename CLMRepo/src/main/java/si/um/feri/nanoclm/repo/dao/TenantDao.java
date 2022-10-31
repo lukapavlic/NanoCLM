@@ -15,7 +15,7 @@ public class TenantDao {
     private static final Logger log = Logger.getLogger(TenantDao.class.toString());
     public class TenantUniqueNameNotAllowedException extends Exception {}
 
-    public static final Set TENANT_UNIQUE_NAME_BLACK_LIST=Set.of("EVENTLOG","TENANTS");
+    public static final Set<String> TENANT_UNIQUE_NAME_BLACK_LIST=Set.of("EVENTLOG","TENANTS");
     public static final String DELETED_APPENDIX="_DELETED";
 
     public TenantDao(TenantRepository repo, EventNotifyer eventNotifyer) {

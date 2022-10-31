@@ -25,7 +25,7 @@ public class Contact {
         this.title = title;
     }
 
-    private final static Random rand=new Random();
+    private static final Random rand=new Random();
 
     public String generateUniqueId(String belongingToTenant) {
         setUniqueId(belongingToTenant+"-"+System.nanoTime()+"-"+rand.nextInt(10_000));

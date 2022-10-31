@@ -1,6 +1,5 @@
 package si.um.feri.nanoclm.repo.events;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public record Event (
