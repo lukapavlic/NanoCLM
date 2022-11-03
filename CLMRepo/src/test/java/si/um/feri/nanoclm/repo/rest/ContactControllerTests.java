@@ -58,7 +58,16 @@ class ContactControllerTests {
 
 	@Test
 	void createNewTenant() {
-		ResponseEntity<Contact> ret=rest.post("TENANT",new PostContact("John", Map.of("surname","Doe"),Set.of(),Map.of()));
+        //wrong user
+        ResponseEntity<Contact> ret2=rest.post("user@nanoclm.com","TENANT",new PostContact("John", Map.of("surname","Doe"),Set.of(),Map.of()));
+        Assertions.assertEquals(405,ret2.getStatusCode().value());
+
+        //wrong tenant
+        ResponseEntity<Contact> ret3=rest.post("test@user.com","TENANTTT",new PostContact("John", Map.of("surname","Doe"),Set.of(),Map.of()));
+        Assertions.assertEquals(HttpStatus.NOT_FOUND,ret3.getStatusCode());
+
+        //all ok
+        ResponseEntity<Contact> ret=rest.post("test@user.com","TENANT",new PostContact("John", Map.of("surname","Doe"),Set.of(),Map.of()));
 		Contact c=ret.getBody();
 		Assertions.assertEquals(HttpStatus.OK,ret.getStatusCode());
 		Assertions.assertEquals("John",c.getTitle());
@@ -72,7 +81,12 @@ class ContactControllerTests {
 
     @Test
     void deleteTenant() {
-        ResponseEntity<String> ret=rest.delete("TENANT",newContact.getUniqueId());
+        //user not allowed
+        ResponseEntity<String> ret2=rest.delete("user@nanoclm.com","TENANT",newContact.getUniqueId());
+        Assertions.assertEquals(405,ret2.getStatusCode().value());
+
+        //user ok
+        ResponseEntity<String> ret=rest.delete("test@user.com","TENANT",newContact.getUniqueId());
         String s=ret.getBody();
         Assertions.assertEquals(HttpStatus.OK,ret.getStatusCode());
         Assertions.assertEquals("Deleted",s);
@@ -81,7 +95,11 @@ class ContactControllerTests {
 
     @Test
     void addProperty() {
-        ResponseEntity<Contact> ret=rest.postPropertyToContact("TENANT",newContact.getUniqueId(),
+        ResponseEntity<Contact> ret2=rest.postPropertyToContact("user@nanoclm.com","TENANT",newContact.getUniqueId(),
+                new PostProp("birthYear","1992"));
+        Assertions.assertEquals(405,ret2.getStatusCode().value());
+
+        ResponseEntity<Contact> ret=rest.postPropertyToContact("test@user.com","TENANT",newContact.getUniqueId(),
                 new PostProp("birthYear","1992"));
         Contact c=ret.getBody();
         Assertions.assertEquals(2,c.getProps().size());
@@ -90,7 +108,10 @@ class ContactControllerTests {
 
     @Test
     void addAttribute() {
-        ResponseEntity<Contact> ret=rest.postAttributeToContact("TENANT",newContact.getUniqueId(),"member2022");
+        ResponseEntity<Contact> ret2=rest.postAttributeToContact("user@nanoclm.com","TENANT",newContact.getUniqueId(),"member2022");
+        Assertions.assertEquals(405,ret2.getStatusCode().value());
+
+        ResponseEntity<Contact> ret=rest.postAttributeToContact("test@user.com","TENANT",newContact.getUniqueId(),"member2022");
         Contact c=ret.getBody();
         Assertions.assertEquals(1,c.getAttrs().size());
         Assertions.assertTrue(c.getAttrs().contains("member2022"));
@@ -98,11 +119,13 @@ class ContactControllerTests {
 
     @Test
     void addComment() {
-        ResponseEntity<Contact> ret=rest.postCommentToContact("TENANT",newContact.getUniqueId(),"commentor","my comment");
+        ResponseEntity<Contact> ret2=rest.postCommentToContact("user@nanoclm.com","TENANT",newContact.getUniqueId(),"my comment");
+        Assertions.assertEquals(405,ret2.getStatusCode().value());
+
+        ResponseEntity<Contact> ret=rest.postCommentToContact("test@user.com","TENANT",newContact.getUniqueId(),"my comment");
         Contact c=ret.getBody();
         Assertions.assertEquals(1,c.getComments().size());
         Assertions.assertTrue(c.getComments().values().contains("my comment"));
-        System.out.println(c);
     }
 
 }

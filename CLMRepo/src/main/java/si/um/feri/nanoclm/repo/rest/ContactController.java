@@ -13,13 +13,17 @@ import si.um.feri.nanoclm.repo.dto.PostProp;
 import si.um.feri.nanoclm.repo.events.Event;
 import si.um.feri.nanoclm.repo.events.EventType;
 import si.um.feri.nanoclm.repo.events.producer.EventNotifyer;
-import si.um.feri.nanoclm.repo.vao.Tenant;
+import si.um.feri.nanoclm.repo.rest.security.SecurityManager;
 import si.um.feri.nanoclm.repo.vao.Contact;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
 
+/**
+ * Standard request headers:
+ * - userToken
+ * - tenantUniqueName
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/contacts")
@@ -37,11 +41,19 @@ public class ContactController {
 	EventNotifyer eventNotifyer;
 
 	@PostMapping()
-	public ResponseEntity<Contact> post(@RequestHeader("tenantUniqueName")String tenantUniqueNameIn, @RequestBody PostContact pc) {
+	public ResponseEntity<Contact> post(@RequestHeader("userToken") String userToken,
+										@RequestHeader("tenantUniqueName") String tenantUniqueNameIn,
+										@RequestBody PostContact pc) {
 		String tenantUniqueName=tenantUniqueNameIn.toUpperCase();
-		//verify
-		Optional<Tenant> client= tenantDao.findByTenantUniqueName(tenantUniqueName);
-		if (client.isEmpty()) return ResponseEntity.notFound().build();
+		String userId=SecurityManager.userIdFromUserToken(userToken);
+		//security
+		try {
+			SecurityManager.checkUserActOnTenant(tenantDao,tenantUniqueName,userId);
+		} catch (SecurityManager.TenantNotFoundException e) {
+			return ResponseEntity.notFound().build();
+		} catch (SecurityManager.UserNotAllowedOnTenantException e) {
+			return ResponseEntity.status(405).build(); //not allowed
+		}
 		//insert
 		Contact ret=new Contact(pc);
 		ret.generateUniqueId(tenantUniqueName);
@@ -49,7 +61,7 @@ public class ContactController {
 		log.info(() -> "A new contact created into "+tenantUniqueName+":"+retFinal);
 		//log
 		eventNotifyer.notify(new Event(
-				null,
+				userId,
 				tenantUniqueName,
 				ret.getUniqueId(),
 				EventType.CONTACT_CREATED,
@@ -61,8 +73,21 @@ public class ContactController {
 	}
 
 	@PostMapping("/{id}/props")
-	public ResponseEntity<Contact> postPropertyToContact(@RequestHeader("tenantUniqueName")String tenantUniqueNameIn, @PathVariable("id") String id, @RequestBody PostProp pp) {
+	public ResponseEntity<Contact> postPropertyToContact(@RequestHeader("userToken") String userToken,
+														 @RequestHeader("tenantUniqueName") String tenantUniqueNameIn,
+														 @PathVariable("id") String id,
+														 @RequestBody PostProp pp) {
 		String tenantUniqueName=tenantUniqueNameIn.toUpperCase();
+		String userId=SecurityManager.userIdFromUserToken(userToken);
+		//security
+		try {
+			SecurityManager.checkUserActOnTenant(tenantDao,tenantUniqueName,userId);
+		} catch (SecurityManager.TenantNotFoundException e) {
+			return ResponseEntity.notFound().build();
+		} catch (SecurityManager.UserNotAllowedOnTenantException e) {
+			return ResponseEntity.status(405).build(); //not allowed
+		}
+
 		//verify
 		Query q=new Query(Criteria.where("uniqueId").is(id));
 		Contact val=dao.findOne(q, Contact.class,tenantUniqueName);
@@ -74,7 +99,7 @@ public class ContactController {
 		log.info(() -> "A new contact property set into "+tenantUniqueName+":"+val.getTitle()+"-"+pp.name());
 		//log
 		eventNotifyer.notify(new Event(
-				null,
+				userId,
 				tenantUniqueName,
 				val.getUniqueId(),
 				EventType.PROPERTY_SET,
@@ -86,8 +111,21 @@ public class ContactController {
 	}
 
 	@PostMapping("/{id}/attrs")
-	public ResponseEntity<Contact> postAttributeToContact(@RequestHeader("tenantUniqueName")String tenantUniqueNameIn, @PathVariable("id") String id, @RequestBody String attr) {
+	public ResponseEntity<Contact> postAttributeToContact(@RequestHeader("userToken") String userToken,
+														  @RequestHeader("tenantUniqueName") String tenantUniqueNameIn,
+														  @PathVariable("id") String id,
+														  @RequestBody String attr) {
 		String tenantUniqueName=tenantUniqueNameIn.toUpperCase();
+		String userId=SecurityManager.userIdFromUserToken(userToken);
+		//security
+		try {
+			SecurityManager.checkUserActOnTenant(tenantDao,tenantUniqueName,userId);
+		} catch (SecurityManager.TenantNotFoundException e) {
+			return ResponseEntity.notFound().build();
+		} catch (SecurityManager.UserNotAllowedOnTenantException e) {
+			return ResponseEntity.status(405).build(); //not allowed
+		}
+
 		//verify
 		Query q=new Query(Criteria.where("uniqueId").is(id));
 		Contact val=dao.findOne(q, Contact.class,tenantUniqueName);
@@ -99,7 +137,7 @@ public class ContactController {
 		log.info(() -> "A new contact attribute set into "+tenantUniqueName+":"+val.getTitle()+"-"+attr);
 		//log
 		eventNotifyer.notify(new Event(
-				null,
+				userId,
 				tenantUniqueName,
 				val.getUniqueId(),
 				EventType.ATTRIBUTE_SET,
@@ -111,20 +149,33 @@ public class ContactController {
 	}
 
 	@PostMapping("/{id}/comments")
-	public ResponseEntity<Contact> postCommentToContact(@RequestHeader("tenantUniqueName")String tenantUniqueNameIn, @PathVariable("id") String id, @RequestHeader("user") String user,@RequestBody String comment) {
+	public ResponseEntity<Contact> postCommentToContact(@RequestHeader("userToken") String userToken,
+														@RequestHeader("tenantUniqueName") String tenantUniqueNameIn,
+														@PathVariable("id") String id,
+														@RequestBody String comment) {
 		String tenantUniqueName=tenantUniqueNameIn.toUpperCase();
+		String userId=SecurityManager.userIdFromUserToken(userToken);
+		//security
+		try {
+			SecurityManager.checkUserActOnTenant(tenantDao,tenantUniqueName,userId);
+		} catch (SecurityManager.TenantNotFoundException e) {
+			return ResponseEntity.notFound().build();
+		} catch (SecurityManager.UserNotAllowedOnTenantException e) {
+			return ResponseEntity.status(405).build(); //not allowed
+		}
+
 		//verify
 		Query q=new Query(Criteria.where("uniqueId").is(id));
 		Contact val=dao.findOne(q, Contact.class,tenantUniqueName);
 		if (val==null) return ResponseEntity.notFound().build();
 		//put comment
 		String old=val.toString();
-		val.getComments().put(user+System.currentTimeMillis(),comment);
+		val.getComments().put(userId.hashCode()+"-"+System.currentTimeMillis(),comment);
 		dao.save(val,tenantUniqueName);
 		log.info(() -> "A new comment in "+tenantUniqueName+":"+val.getTitle()+"-"+comment);
 		//log
 		eventNotifyer.notify(new Event(
-				user,
+				userId,
 				tenantUniqueName,
 				val.getUniqueId(),
 				EventType.COMMENT_SET,
@@ -136,27 +187,66 @@ public class ContactController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@RequestHeader("tenantUniqueName")String tenantUniqueNameIn,@PathVariable("id") String id) {
+	public ResponseEntity<String> delete(@RequestHeader("userToken") String userToken,
+										 @RequestHeader("tenantUniqueName") String tenantUniqueNameIn,
+										 @PathVariable("id") String id) {
 		String tenantUniqueName=tenantUniqueNameIn.toUpperCase();
+		String userId=SecurityManager.userIdFromUserToken(userToken);
+		//security
+		try {
+			SecurityManager.checkUserActOnTenant(tenantDao,tenantUniqueName,userId);
+		} catch (SecurityManager.TenantNotFoundException e) {
+			return ResponseEntity.notFound().build();
+		} catch (SecurityManager.UserNotAllowedOnTenantException e) {
+			return ResponseEntity.status(405).build(); //not allowed
+		}
+
 		//verify
 		Query q=new Query(Criteria.where("uniqueId").is(id));
 		Contact val=dao.findOne(q, Contact.class,tenantUniqueName);
 		if (val==null) return ResponseEntity.notFound().build();
+
 		//delete
-		new ContactDao(dao, eventNotifyer).deleteContact(id,tenantUniqueName,null);
+		new ContactDao(dao, eventNotifyer).deleteContact(id,tenantUniqueName,userId);
 
 	    return ResponseEntity.ok("Deleted");
 	}
 
 	@GetMapping()
-	public @ResponseBody List<Contact> getAll(@RequestHeader("tenantUniqueName")String tenantUniqueNameIn) {
-		return  dao.findAll(Contact.class, tenantUniqueNameIn.toUpperCase());
+	public @ResponseBody ResponseEntity<List<Contact>> getAll(@RequestHeader("userToken") String userToken,
+											  @RequestHeader("tenantUniqueName") String tenantUniqueNameIn) {
+		String tenantUniqueName=tenantUniqueNameIn.toUpperCase();
+		String userId=SecurityManager.userIdFromUserToken(userToken);
+		//security
+		try {
+			SecurityManager.checkUserActOnTenant(tenantDao,tenantUniqueName,userId);
+		} catch (SecurityManager.TenantNotFoundException e) {
+			return ResponseEntity.notFound().build();
+		} catch (SecurityManager.UserNotAllowedOnTenantException e) {
+			return ResponseEntity.status(405).build(); //not allowed
+		}
+
+		return ResponseEntity.ok(dao.findAll(Contact.class, tenantUniqueName));
 	}
 
+
 	@GetMapping("/{id}")
-	public @ResponseBody ResponseEntity<Contact> getById(@RequestHeader("tenantUniqueName")String tenantUniqueNameIn, @PathVariable("id") String id) {
+	public @ResponseBody ResponseEntity<Contact> getById(@RequestHeader("userToken") String userToken,
+														 @RequestHeader("tenantUniqueName") String tenantUniqueNameIn,
+														 @PathVariable("id") String id) {
+		String tenantUniqueName=tenantUniqueNameIn.toUpperCase();
+		String userId=SecurityManager.userIdFromUserToken(userToken);
+		//security
+		try {
+			SecurityManager.checkUserActOnTenant(tenantDao,tenantUniqueName,userId);
+		} catch (SecurityManager.TenantNotFoundException e) {
+			return ResponseEntity.notFound().build();
+		} catch (SecurityManager.UserNotAllowedOnTenantException e) {
+			return ResponseEntity.status(405).build(); //not allowed
+		}
+
 		Query q=new Query(Criteria.where("uniqueId").is(id));
-		Contact val=dao.findOne(q, Contact.class, tenantUniqueNameIn.toUpperCase());
+		Contact val=dao.findOne(q, Contact.class, tenantUniqueName);
 		return ResponseEntity.ok(val);
 	}
 

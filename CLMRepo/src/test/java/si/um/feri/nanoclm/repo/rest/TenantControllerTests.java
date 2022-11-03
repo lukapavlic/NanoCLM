@@ -47,7 +47,7 @@ class TenantControllerTests {
 
 	@Test
 	void createNewTenant() {
-		ResponseEntity<Tenant> ret=rest.post(new PostTenant("Title","TTL", Set.of()));
+		ResponseEntity<Tenant> ret=rest.post("user@nanoclm.com",new PostTenant("Title","TTL", Set.of()));
 		Tenant t=ret.getBody();
 		Assertions.assertEquals(HttpStatus.OK,ret.getStatusCode());
 		Assertions.assertEquals("TTL",t.getTenantUniqueName());
@@ -57,7 +57,10 @@ class TenantControllerTests {
 
     @Test
     void allowOpsOnTenant() {
-        ResponseEntity<Tenant> ret=rest.postAllowUserManagingTenant("TENANT","user@email.com");
+        ResponseEntity<Tenant> ret2=rest.postAllowUserManagingTenant("user@nanoclm.com","TENANT","user@email.com");
+        Assertions.assertEquals(405,ret2.getStatusCode().value());
+
+        ResponseEntity<Tenant> ret=rest.postAllowUserManagingTenant("test@user.com","TENANT","user@email.com");
         Tenant t=ret.getBody();
         Assertions.assertEquals(HttpStatus.OK,ret.getStatusCode());
         Assertions.assertTrue(t.getAllowedUsers().contains("user@email.com"));
@@ -66,12 +69,15 @@ class TenantControllerTests {
 
     @Test
     void revokeOpsOnTenant() {
-        ResponseEntity<Tenant> ret=rest.post(new PostTenant("Title","TTL", Set.of("allowmeuser")));
+        ResponseEntity<Tenant> ret=rest.post("test@user.com",new PostTenant("Title","TTL", Set.of("allowmeuser")));
         Tenant t=ret.getBody();
         Assertions.assertEquals(HttpStatus.OK,ret.getStatusCode());
         Assertions.assertTrue(t.getAllowedUsers().contains("allowmeuser"));
 
-        ret=rest.postRevokeUserManagingTenant("TENANT","allowmeuser");
+        ret=rest.postRevokeUserManagingTenant("user@nanoclm.com","TTL","allowmeuser");
+        Assertions.assertEquals(405,ret.getStatusCode().value());
+
+        ret=rest.postRevokeUserManagingTenant("allowmeuser","TTL","allowmeuser");
         t=ret.getBody();
         Assertions.assertFalse(t.getAllowedUsers().contains("allowmeuser"));
     }
