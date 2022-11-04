@@ -1,5 +1,7 @@
 # NanoCLM - CLM Search Microservice
 
+**_DEPRECATED_** - Merged with the CLMRepo
+
 ## Scope
 - Contact (id / title / key-value set / attribute set / comments set) **searching**;
 - Search result **filtering**

@@ -1,4 +1,4 @@
-package si.um.feri.nanoclm.search.rest.security;
+package si.um.feri.nanoclm.backend.repo.security;
 
 public interface SecurityManager {
 

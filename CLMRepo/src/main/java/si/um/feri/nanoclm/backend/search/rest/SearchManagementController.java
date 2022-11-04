@@ -1,16 +1,16 @@
-package si.um.feri.nanoclm.search.rest;
+package si.um.feri.nanoclm.backend.search.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import si.um.feri.nanoclm.search.dao.SearchRepository;
-import si.um.feri.nanoclm.search.rest.security.SecurityManager;
-import si.um.feri.nanoclm.search.vao.Search;
+import si.um.feri.nanoclm.backend.search.dao.SearchRepository;
+import si.um.feri.nanoclm.backend.search.vao.Search;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
+import si.um.feri.nanoclm.backend.repo.security.SecurityManager;
 
 /**
  * Standard request headers:

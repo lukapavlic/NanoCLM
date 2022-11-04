@@ -8,6 +8,10 @@
 - Every Tenant can access/edit only its own Contacts
 - Deletion is not enabled: when deleting a Contact, it is moved to a "trash" collection (_tenantUniqueName_deleted_)
 - All events are published to a ActiveMQ topic
+- Contact **searching**;
+- Search result **filtering**
+- **Predefined** / **stored** (named) searches and filters (tenant-public or private)
+- User **search-related preferences**
 
 ## Prerequisites
 - MongoDB (dev on 4.4.2) running locally, port 27017, no user/pass (see _resources/application-dev.properties_)
@@ -16,7 +20,7 @@
 When ObjectMessage in use (deprecated at current implementation), make sure to run 
 Apache ActiveMQ with param (see https://activemq.apache.org/objectmessage.html for details):
 ```
--Dorg.apache.activemq.SERIALIZABLE_PACKAGES=si.um.feri.nanoclm.repo.events,java.time
+-Dorg.apache.activemq.SERIALIZABLE_PACKAGES=si.um.feri.nanoclm.backend.events,java.time
 ```
 
 ## Running
