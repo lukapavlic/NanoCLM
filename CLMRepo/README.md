@@ -1,4 +1,4 @@
-# NanoCLM - CLM Repository Microservice
+# NanoCLM - CLM Repository/Backend
 
 ## Scope
 - App stores **Tenants** (uniqueName / title) and **Contacts** (id / title / key-value set / attribute set / comments set) in DB;
