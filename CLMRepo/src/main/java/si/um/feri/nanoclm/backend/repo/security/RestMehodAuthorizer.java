@@ -22,7 +22,7 @@ public class RestMehodAuthorizer {
 
     private String userId;
 
-    private ResponseEntity response;
+    private ResponseEntity<?> response;
 
     private boolean failed=false;
 
