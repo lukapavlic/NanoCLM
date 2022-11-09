@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import si.um.feri.nanoclm.backend.events.vao.EventType;
 import si.um.feri.nanoclm.backend.repo.dao.ContactDao;
 import si.um.feri.nanoclm.backend.repo.dao.TenantDao;
 import si.um.feri.nanoclm.backend.repo.dao.TenantRepository;

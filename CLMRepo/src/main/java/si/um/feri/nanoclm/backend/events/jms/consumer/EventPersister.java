@@ -3,7 +3,7 @@ package si.um.feri.nanoclm.backend.events.jms.consumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
-import si.um.feri.nanoclm.backend.events.EventConverter;
+import si.um.feri.nanoclm.backend.events.dto.EventConverter;
 import si.um.feri.nanoclm.backend.events.dao.EventLogRepository;
 import si.um.feri.nanoclm.backend.events.vao.EventLog;
 import javax.jms.MapMessage;

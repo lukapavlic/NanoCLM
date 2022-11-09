@@ -2,8 +2,7 @@ package si.um.feri.nanoclm.backend.events.vao;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import si.um.feri.nanoclm.backend.events.Event;
-import si.um.feri.nanoclm.backend.events.EventType;
+import si.um.feri.nanoclm.backend.events.dto.Event;
 import si.um.feri.nanoclm.backend.events.dto.GetEventSimpleMode;
 import java.time.LocalDateTime;
 

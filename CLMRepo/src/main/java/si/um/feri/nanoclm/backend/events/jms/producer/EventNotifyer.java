@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
-import si.um.feri.nanoclm.backend.events.Event;
-import si.um.feri.nanoclm.backend.events.EventConverter;
+import si.um.feri.nanoclm.backend.events.dto.Event;
+import si.um.feri.nanoclm.backend.events.dto.EventConverter;
 import javax.jms.MapMessage;
 import java.util.logging.Logger;
 

@@ -1,8 +1,8 @@
 package si.um.feri.nanoclm.backend.repo.dao;
 
 import si.um.feri.nanoclm.backend.repo.dto.PostTenant;
-import si.um.feri.nanoclm.backend.events.Event;
-import si.um.feri.nanoclm.backend.events.EventType;
+import si.um.feri.nanoclm.backend.events.dto.Event;
+import si.um.feri.nanoclm.backend.events.vao.EventType;
 import si.um.feri.nanoclm.backend.events.jms.producer.EventNotifyer;
 import si.um.feri.nanoclm.backend.repo.vao.Tenant;
 import java.time.LocalDateTime;

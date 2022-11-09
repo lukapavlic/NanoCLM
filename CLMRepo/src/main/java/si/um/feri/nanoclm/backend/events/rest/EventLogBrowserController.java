@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import si.um.feri.nanoclm.backend.repo.dao.TenantRepository;
-import si.um.feri.nanoclm.backend.events.EventType;
+import si.um.feri.nanoclm.backend.events.vao.EventType;
 import si.um.feri.nanoclm.backend.events.dao.EventLogRepository;
 import si.um.feri.nanoclm.backend.events.dto.GetEventSimpleMode;
 import si.um.feri.nanoclm.backend.events.vao.EventLog;

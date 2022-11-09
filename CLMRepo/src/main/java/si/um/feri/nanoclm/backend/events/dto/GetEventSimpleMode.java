@@ -1,6 +1,6 @@
 package si.um.feri.nanoclm.backend.events.dto;
 
-import si.um.feri.nanoclm.backend.events.EventType;
+import si.um.feri.nanoclm.backend.events.vao.EventType;
 import java.time.LocalDateTime;
 
 public record GetEventSimpleMode(

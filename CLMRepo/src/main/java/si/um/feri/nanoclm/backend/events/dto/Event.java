@@ -1,4 +1,6 @@
-package si.um.feri.nanoclm.backend.events;
+package si.um.feri.nanoclm.backend.events.dto;
+
+import si.um.feri.nanoclm.backend.events.vao.EventType;
 
 import java.time.LocalDateTime;
 

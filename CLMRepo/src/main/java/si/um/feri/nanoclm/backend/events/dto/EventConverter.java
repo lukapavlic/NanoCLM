@@ -1,4 +1,7 @@
-package si.um.feri.nanoclm.backend.events;
+package si.um.feri.nanoclm.backend.events.dto;
+
+import si.um.feri.nanoclm.backend.events.dto.Event;
+import si.um.feri.nanoclm.backend.events.vao.EventType;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
@@ -9,7 +12,7 @@ import java.util.TimeZone;
 
 public interface EventConverter {
 
-    static void populateMapMessage(Event e,MapMessage mm) throws JMSException {
+    static void populateMapMessage(Event e, MapMessage mm) throws JMSException {
         mm.setString("user",e.user());
         mm.setString("tenantUniqueName",e.tenantUniqueName());
         mm.setString("contactUniqueId",e.contactUniqueId());

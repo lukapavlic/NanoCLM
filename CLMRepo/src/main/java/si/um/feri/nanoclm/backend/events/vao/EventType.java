@@ -1,4 +1,4 @@
-package si.um.feri.nanoclm.backend.events;
+package si.um.feri.nanoclm.backend.events.vao;
 
 public enum EventType {
     TENANT_CREATED,TENANT_ALLOWANCE_GRANTED,TENANT_ALLOWANCE_REVOKED,

@@ -2,6 +2,9 @@ package si.um.feri.nanoclm.backend.search.vao;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import si.um.feri.nanoclm.backend.search.dto.PostSearch;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,6 +16,38 @@ public class Search {
     public enum SortOrientation { ASC, DESC }
 
     public Search() {
+    }
+
+    public Search(PostSearch ps, String owner, String tenant) {
+        this.owner = owner;
+        this.onTenant = tenant;
+        this.searchName = ps.searchName();
+        this.search = ps.search();
+        this.publicSearchOnTenant = ps.publicSearchOnTenant();
+        this.presentation = ps.presentation();
+        this.sortOrientation = ps.sortOrientation();
+        this.sortBy =ps.sortBy();
+        this.getFilters().addAll(ps.filters());
+        this.mongoId = ps.mongoId();
+    }
+
+    public PostSearch asPostSearchDto() {
+        return new PostSearch(
+            mongoId,
+            searchName,
+            publicSearchOnTenant,
+            search,filters,
+            sortBy,
+            sortOrientation,
+            presentation
+        );
+    }
+
+    public si.um.feri.nanoclm.backend.search.dto.Search asSearchDto() {
+        return new si.um.feri.nanoclm.backend.search.dto.Search(
+                search,filters,
+                sortBy,sortOrientation
+        );
     }
 
     public Search(String owner, String onTenant, String searchName, String search, boolean publicSearchOnTenant, List<Filter> filters) {
@@ -121,6 +156,7 @@ public class Search {
     }
 
     public List<Filter> getFilters() {
+        if (filters==null) filters=new ArrayList<>();
         return filters;
     }
 

@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import si.um.feri.nanoclm.backend.search.dao.SearchRepository;
-import si.um.feri.nanoclm.backend.search.vao.Search;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 import si.um.feri.nanoclm.backend.repo.security.SecurityManager;
+import si.um.feri.nanoclm.backend.search.dto.PostSearch;
+import si.um.feri.nanoclm.backend.search.vao.Search;
 
 /**
  * Standard request headers:
@@ -27,29 +28,23 @@ public class SearchManagementController {
     private SearchRepository dao;
 
     @PostMapping
-    public Search postSearch(@RequestHeader("userToken") String userToken,
+    public PostSearch postSearch(@RequestHeader("userToken") String userToken,
                              @RequestHeader("tenantUniqueName") String tenantUniqueName,
-                             @RequestBody Search s) {
+                             @RequestBody PostSearch s) {
         String userId=SecurityManager.userIdFromUserToken(userToken);
-
-        s.setOwner(userId);
-        s.setOnTenant(tenantUniqueName);
-
-        return dao.save(s);
+        Search vao=new Search(s,userId,tenantUniqueName);
+        return dao.save(vao).asPostSearchDto();
     }
 
     @PutMapping("{id}")
-    public Search putSearch(@RequestHeader("userToken") String userToken,
+    public PostSearch putSearch(@RequestHeader("userToken") String userToken,
                             @RequestHeader("tenantUniqueName") String tenantUniqueName,
                             @PathVariable("id") String searchMongoId,
-                            @RequestBody Search s) {
+                            @RequestBody PostSearch s) {
         String userId=SecurityManager.userIdFromUserToken(userToken);
-
-        s.setOwner(userId);
-        s.setOnTenant(tenantUniqueName);
-        s.setMongoId(searchMongoId);
-
-        return dao.save(s);
+        Search vao=new Search(s,userId,tenantUniqueName);
+        vao.setMongoId(searchMongoId);
+        return dao.save(vao).asPostSearchDto();
     }
 
     @DeleteMapping("{id}")
@@ -68,7 +63,7 @@ public class SearchManagementController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Search> getSearchById(@RequestHeader("userToken") String userToken,
+    public ResponseEntity<PostSearch> getSearchById(@RequestHeader("userToken") String userToken,
                                                 @RequestHeader("tenantUniqueName") String tenantUniqueName,
                                                 @PathVariable("id") String searchMongoId) {
         String userId=SecurityManager.userIdFromUserToken(userToken);
@@ -78,19 +73,20 @@ public class SearchManagementController {
         if (!s.get().getOnTenant().equals(tenantUniqueName)) return ResponseEntity.status(405).build(); //not allowed
         if (!s.get().getOwner().equals(userId) || !s.get().isPublicSearchOnTenant()) return ResponseEntity.status(405).build(); //not allowed
 
-        return ResponseEntity.ok(s.get());
+        return ResponseEntity.ok(s.get().asPostSearchDto());
     }
 
     @GetMapping
-    public Set<Search> getAvailableSearches(@RequestHeader("userToken") String userToken,
+    public Set<PostSearch> getAvailableSearches(@RequestHeader("userToken") String userToken,
                                             @RequestHeader("tenantUniqueName") String tenantUniqueName) {
         String userId=SecurityManager.userIdFromUserToken(userToken);
 
         List<Search> mySearches=dao.findAllByOwner(userId);
         List<Search> publicSearches=dao.findAllByOnTenantAndPublicSearchOnTenantTrue(tenantUniqueName);
-        Set<Search> ret=new HashSet<>();
-        ret.addAll(mySearches);
-        ret.addAll(publicSearches);
+        Set<PostSearch> ret=new HashSet<>();
+
+        mySearches.forEach(s->ret.add(s.asPostSearchDto()));
+        publicSearches.forEach(s->ret.add(s.asPostSearchDto()));
         return ret;
     }
 
