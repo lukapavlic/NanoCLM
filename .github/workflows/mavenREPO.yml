@@ -15,7 +15,7 @@ on:
     branches: [ master ]
 defaults:
   run:
-    working-directory: CLMRepo
+    working-directory: ./CLMRepo
     
 jobs:
   build:
