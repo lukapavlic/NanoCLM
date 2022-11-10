@@ -68,8 +68,7 @@ jobs:
           with:
             java-version: 17
         - run: mvn -B package --file pom.xml -DskipTests
-        - run: ls ./target -a
-        - run: mkdir staging && cp target/*jar-with-dependencies.jar staging
+        - run: mkdir staging && cp target/*.jar staging
         - uses: actions/upload-artifact@v1
           with:
             name: CLMRepo
