@@ -18,6 +18,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        mongodb-version: ['4.2', '4.4', '5.0', '6.0']
 
     steps:
     - uses: actions/checkout@v3
@@ -27,6 +30,15 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+        
+    - name: Setup MongoDB
+      uses: supercharge/mongodb-github-action@1.8.0
+      with:
+        mongodb-version: ${{ matrix.mongodb-version }}
+        
+    - name: Sertup Apache ActiveMQ
+      uses: apache/activemq@5.17.2
+      
     - name: Build with Maven
       run: mvn -B package --file ./CLMRepo/pom.xml
 
