@@ -54,7 +54,7 @@ jobs:
         restore-keys: ${{ runner.os }}-m2  
     
     - name: Build with Maven
-      run: mvn package --file ./pom.xml
+      run: mvn -B package --file ./pom.xml -DskipTests
       
     - name: Test with Maven
       run: mvn test --file ./pom.xml
@@ -71,18 +71,16 @@ jobs:
         - run: mkdir staging && cp target/*jar-with-dependencies.jar staging
         - uses: actions/upload-artifact@v1
           with:
-            name: Package
+            name: CLMRepo
             path: staging
             
   build-docker-image:
-    name: Publish to Docker Hub
+    name: Build Docker image
     runs-on: ubuntu-latest
     needs: [build]
 
     steps:
       - uses: actions/checkout@v2
       - name: Build Container image
-        run: docker build -t clmrepo:latest ./clmrepo/
-      - name: Publish Docker image
-        run: docker push ${{ secrets.DOCKER_REPO }}
+        run: docker build -t clmrepo:latest .
 
