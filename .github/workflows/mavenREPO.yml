@@ -37,7 +37,7 @@ jobs:
         mongodb-version: ${{ matrix.mongodb-version }}
         
     - name: Sertup Apache ActiveMQ
-      uses: apache/activemq@5.17.1
+      uses: rmohr/activemq@5.15.9
       
     - name: Build with Maven
       run: mvn -B package --file ./CLMRepo/pom.xml
