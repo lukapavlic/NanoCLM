@@ -85,6 +85,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - run: ls -a
       - name: Build docker-compose
         run: |
           docker-compose --file CLMRepo/docker-compose.yml build
