@@ -10,14 +10,8 @@ name: Java CI with Maven
 
 on:
   push:
-    paths-ignore:
-    - 'CLMGui/**'
-    - '**.md'
     branches: [ master ]
   pull_request:
-    paths-ignore:
-    - 'CLMGui/**'
-    - '**.md'
     branches: [ master ]
 defaults:
   run:
