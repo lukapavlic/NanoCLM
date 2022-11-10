@@ -59,7 +59,8 @@ jobs:
     - name: Test with Maven
       run: mvn test --file ./pom.xml
     
-  publish-job:
+  artefact-build:
+      name: Build Artefact
       runs-on: ubuntu-latest
       needs: [build]
       steps:
@@ -68,11 +69,7 @@ jobs:
           with:
             java-version: 17
         - run: mvn -B package --file pom.xml -DskipTests
-        - run: ls -a
-        - run: ls -a target
-        - run: pwd
         - run: mkdir staging && cp target/*.jar staging
-        
         - uses: actions/upload-artifact@v1
           with:
             name: CLMRepo
@@ -85,8 +82,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - run: ls -a
       - name: Build docker-compose
         run: |
-          docker-compose --file CLMRepo/docker-compose.yml build
+          docker-compose --file docker-compose.yml build
 
