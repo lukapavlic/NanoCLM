@@ -13,7 +13,10 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
+defaults:
+  run:
+    working-directory: CLMRepo
+    
 jobs:
   build:
 
@@ -46,4 +49,4 @@ jobs:
     
       
     - name: Build with Maven
-      run: mvn -B package --file ./CLMRepo/pom.xml
+      run: mvn -B package --file ./pom.xml
