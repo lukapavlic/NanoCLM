@@ -10,10 +10,10 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ master ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ master ]
-    
+    branches: [ "main" ]
+
 jobs:
   build:
 
@@ -46,7 +46,4 @@ jobs:
     
       
     - name: Build with Maven
-      run: mvn -B package --file ./pom.xml
-      
-    - name: Update dependency graph
-      uses: advanced-security/maven-dependency-submission-action@v1
+      run: mvn -B package --file ./CLMRepo/pom.xml
