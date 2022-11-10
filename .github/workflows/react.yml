@@ -7,20 +7,18 @@ name: Node.js CI
 on:
   push:
     paths-ignore:
-    - 'CLMSearch/**'
     - 'CLMRepo/**'
     - '**.md'
-    branches: [ dev-ops, front-end, development, quality-assurance, master ]
+    branches: [ master ]
   pull_request:
     paths-ignore:
-    - 'CLMSearch/**'
     - 'CLMRepo/**'
     - '**.md'
-    branches: [ dev-ops, front-end, development, quality-assurance, master ]
+    branches: [ master ]
 
 defaults:
   run:
-    working-directory: client
+    working-directory: CLMGui
 
 jobs:
   build:
