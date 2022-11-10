@@ -68,6 +68,7 @@ jobs:
           with:
             java-version: 17
         - run: mvn -B package --file pom.xml -DskipTests
+        - run: ls -a
         - run: mkdir staging && cp target/*jar-with-dependencies.jar staging
         - uses: actions/upload-artifact@v1
           with:
@@ -81,6 +82,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Build Container image
-        run: docker build -t clmrepo:latest .
+      - name: Build docker-compose
+        run: |
+          docker-compose clmrepo/docker-compose.yml build
 
