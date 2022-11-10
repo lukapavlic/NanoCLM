@@ -39,6 +39,11 @@ jobs:
     - name: Sertup Apache ActiveMQ
       uses: rmohr/activemq@5.15.9
       
+    - name: Run the build process with Docker
+      uses: addnab/docker-run-action@v3
+      with:
+          image: rmohr/activemq:5.15.9
+      
     - name: Build with Maven
       run: mvn -B package --file ./CLMRepo/pom.xml
 
