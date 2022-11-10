@@ -21,7 +21,24 @@ jobs:
     strategy:
       matrix:
         mongodb-version: ['4.2', '4.4', '5.0', '6.0']
+      
+    services:
+      mongodb:
+        image: mongo
+        options: >-
+            --health-cmd mongo
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+        ports:
+          - 27017:27017
 
+      activemq:
+        image: rmohr/activemq:5.15.9
+        ports:
+          - 61616:61616
+          - 8161:8161
+          
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -31,15 +48,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
         
-    - name: Setup MongoDB
-      uses: supercharge/mongodb-github-action@1.8.0
-      with:
-        mongodb-version: ${{ matrix.mongodb-version }}
-
-    - name: Run the build process with Docker
-      uses: addnab/docker-run-action@v3
-      with:
-          image: rmohr/activemq:5.15.9
+    
       
     - name: Build with Maven
       run: mvn -B package --file ./CLMRepo/pom.xml
