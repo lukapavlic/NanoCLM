@@ -71,7 +71,6 @@ class SearchControllerTests {
         newContact.generateUniqueId("TENANT");
         mongoTemplate.insert(newContact,"TENANT");
 
-
         newContact=new Contact(new PostContact("John 3",
                 Map.of("surname","Doe 3", "name", "John 3", "address", "unknown 3"),
                 Set.of(),Map.of()));
@@ -83,12 +82,8 @@ class SearchControllerTests {
 	void searchSortAscending() {
         ResponseEntity<SearchResult> ret=rest.performSearch("user@clm.com","TENANT",0,102,
                 new Search("", List.of(),"props.name", si.um.feri.nanoclm.backend.search.vao.Search.SortOrientation.ASC));
-
         SearchResult res=ret.getBody();
 		Assertions.assertEquals(HttpStatus.OK,ret.getStatusCode());
-
-        System.out.println(res.results());
-
         Assertions.assertEquals(5,res.allResults());
         Assertions.assertEquals(0,res.page());
         Assertions.assertEquals(102,res.pageSize());
@@ -103,12 +98,8 @@ class SearchControllerTests {
     void searchSortDescending() {
         ResponseEntity<SearchResult> ret=rest.performSearch("user@clm.com","TENANT",0,102,
                 new Search("", List.of(),"props.name", si.um.feri.nanoclm.backend.search.vao.Search.SortOrientation.DESC));
-
         SearchResult res=ret.getBody();
         Assertions.assertEquals(HttpStatus.OK,ret.getStatusCode());
-
-        System.out.println(res.results());
-
         Assertions.assertEquals(5,res.allResults());
         Assertions.assertEquals(0,res.page());
         Assertions.assertEquals(102,res.pageSize());
@@ -122,12 +113,8 @@ class SearchControllerTests {
     void searchPaging() {
         ResponseEntity<SearchResult> ret=rest.performSearch("user@clm.com","TENANT",0,4,
                 new Search("", List.of(),"props.name", si.um.feri.nanoclm.backend.search.vao.Search.SortOrientation.ASC));
-
         SearchResult res=ret.getBody();
         Assertions.assertEquals(HttpStatus.OK,ret.getStatusCode());
-
-        System.out.println(res.results());
-
         Assertions.assertEquals(5,res.allResults());
         Assertions.assertEquals(0,res.page());
         Assertions.assertEquals(4,res.pageSize());
@@ -141,12 +128,8 @@ class SearchControllerTests {
     void searchPagingLastPage() {
         ResponseEntity<SearchResult> ret=rest.performSearch("user@clm.com","TENANT",1,4,
                 new Search("", List.of(),"props.name", si.um.feri.nanoclm.backend.search.vao.Search.SortOrientation.ASC));
-
         SearchResult res=ret.getBody();
         Assertions.assertEquals(HttpStatus.OK,ret.getStatusCode());
-
-        System.out.println(res.results());
-
         Assertions.assertEquals(5,res.allResults());
         Assertions.assertEquals(1,res.page());
         Assertions.assertEquals(4,res.pageSize());
@@ -158,12 +141,8 @@ class SearchControllerTests {
     void searchPagingPageAfterLast() {
         ResponseEntity<SearchResult> ret=rest.performSearch("user@clm.com","TENANT",8,4,
                 new Search("", List.of(),"props.name", si.um.feri.nanoclm.backend.search.vao.Search.SortOrientation.ASC));
-
         SearchResult res=ret.getBody();
         Assertions.assertEquals(HttpStatus.OK,ret.getStatusCode());
-
-        System.out.println(res.results());
-
         Assertions.assertEquals(5,res.allResults());
         Assertions.assertEquals(8,res.page());
         Assertions.assertEquals(4,res.pageSize());

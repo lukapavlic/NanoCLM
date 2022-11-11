@@ -79,8 +79,6 @@ public class SearchController {
         Query query=new Query().with(sort).with(Pageable.ofSize(pgSize).withPage(currentPg));
         List<Contact> ret=contactDao.find(query,Contact.class, tenant);
 
-        System.out.println("SEARCH "+search);
-
         return new SearchResult(ret,allResults,currentPg,pgSize);
     }
 

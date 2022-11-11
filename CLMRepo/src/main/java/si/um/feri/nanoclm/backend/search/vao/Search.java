@@ -168,8 +168,8 @@ public class Search {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Search search = (Search) o;
-        return Objects.equals(mongoId, search.mongoId);
+        Search srch = (Search) o;
+        return Objects.equals(mongoId, srch.mongoId);
     }
 
     @Override

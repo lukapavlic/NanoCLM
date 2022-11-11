@@ -1,8 +1,6 @@
 package si.um.feri.nanoclm.backend.events.dto;
 
-import si.um.feri.nanoclm.backend.events.dto.Event;
 import si.um.feri.nanoclm.backend.events.vao.EventType;
-
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import java.time.Instant;

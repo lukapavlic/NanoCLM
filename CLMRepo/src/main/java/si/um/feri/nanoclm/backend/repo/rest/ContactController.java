@@ -182,7 +182,6 @@ public class ContactController {
 		return ResponseEntity.ok(dao.findAll(Contact.class, tenantUniqueName));
 	}
 
-
 	@GetMapping("/{id}")
 	public @ResponseBody ResponseEntity<Contact> getById(@RequestHeader("userToken") String userToken,
 														 @RequestHeader("tenantUniqueName") String tenantUniqueName,

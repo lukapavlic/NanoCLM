@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Logger;
 import si.um.feri.nanoclm.backend.repo.security.SecurityManager;
 import si.um.feri.nanoclm.backend.search.dto.PostSearch;
 import si.um.feri.nanoclm.backend.search.vao.Search;
@@ -21,8 +20,6 @@ import si.um.feri.nanoclm.backend.search.vao.Search;
 @RestController
 @RequestMapping("/searchmgmt")
 public class SearchManagementController {
-
-    private static final Logger log = Logger.getLogger(SearchManagementController.class.toString());
 
     @Autowired
     private SearchRepository dao;
@@ -48,7 +45,7 @@ public class SearchManagementController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity deleteSearch(@RequestHeader("userToken") String userToken,
+    public ResponseEntity<?> deleteSearch(@RequestHeader("userToken") String userToken,
                                        @RequestHeader("tenantUniqueName") String tenantUniqueName,
                                        @PathVariable("id") String searchMongoId) {
         String userId=SecurityManager.userIdFromUserToken(userToken);
