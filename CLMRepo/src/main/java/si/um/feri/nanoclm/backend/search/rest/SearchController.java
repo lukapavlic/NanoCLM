@@ -34,6 +34,7 @@ public class SearchController {
     @Autowired
     private MongoTemplate contactDao;
 
+    @CrossOrigin(origins = "http://localhost:3000")//TODO: remove this
     @PostMapping
     public ResponseEntity<SearchResult> performSearch(@RequestHeader("userToken") String userToken,
                                                @RequestHeader("tenantUniqueName") String tenantUniqueName,

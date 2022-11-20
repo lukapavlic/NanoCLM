@@ -1,0 +1,6 @@
+export enum FilterType {
+  EQUALS,
+  CONTAINS,
+  ATTRIBUTE_PRESENT,
+  ATTRIBUTE_ABSENT,
+}
