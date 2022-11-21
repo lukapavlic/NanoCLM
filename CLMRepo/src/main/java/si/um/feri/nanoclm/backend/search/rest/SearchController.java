@@ -21,6 +21,7 @@ import java.util.Optional;
  * - userToken
  * - tenantUniqueName
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/search")
 public class SearchController {

@@ -3,7 +3,6 @@ package si.um.feri.nanoclm.backend.search.vao;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import si.um.feri.nanoclm.backend.search.dto.PostSearch;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

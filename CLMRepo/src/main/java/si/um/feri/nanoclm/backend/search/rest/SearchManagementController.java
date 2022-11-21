@@ -17,6 +17,7 @@ import si.um.feri.nanoclm.backend.search.vao.Search;
  * - userToken
  * - tenantUniqueName
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/searchmgmt")
 public class SearchManagementController {

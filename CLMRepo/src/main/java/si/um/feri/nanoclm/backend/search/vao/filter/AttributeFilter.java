@@ -1,6 +1,5 @@
 package si.um.feri.nanoclm.backend.search.vao.filter;
 
-
 import si.um.feri.nanoclm.backend.search.vao.Filter;
 
 public class AttributeFilter extends Filter {
