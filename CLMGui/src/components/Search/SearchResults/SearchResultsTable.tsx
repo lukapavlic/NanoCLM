@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import Contact from '../../Types/Contact';
+import Contact from '../../../types/contact/Contact';
 import { Chip } from '@mui/material';
 import { Stack } from '@mui/system';
 

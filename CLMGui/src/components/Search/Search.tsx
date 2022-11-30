@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import React from 'react';
-import Contact from '../Types/Contact';
+import Contact from '../../types/contact/Contact';
 import PageWrapper from '../Util/PageWrapper';
 //import SearchInput from './SearchInput/SearchInput';
 import SearchResultsTable from './SearchResults/SearchResultsTable';

@@ -1,4 +1,4 @@
-import Contact from "../components/Types/Contact";
+import Contact from "../types/contact/Contact";
 import localData from "./data";
 
 export default function getLocalData(searchString: String): Array<Contact> {

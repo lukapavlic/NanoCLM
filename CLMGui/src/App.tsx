@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import "./assets/css/styles.css";
 import SearchNavbar from "./components/Navbar/SearchNavbar";
 import getLocalData from "./services/local_data.service";
-import Contact from "./components/Types/Contact";
+import Contact from "./types/contact/Contact";
 
 function App() {
   const [searchString, setSearchString] = React.useState<String>("");

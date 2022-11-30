@@ -1,4 +1,4 @@
-import Contact from "../components/Types/Contact";
+import Contact from "../types/contact/Contact";
 
 const localData: Array<Contact> = [
     {

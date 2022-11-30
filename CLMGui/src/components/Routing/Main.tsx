@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from "react-router-dom";
 import PageNotFound from "../PageNotFound/PageNotFound";
 import Search from "../Search/Search";
-import Contact from '../Types/Contact';
+import Contact from '../../types/contact/Contact';
 
 interface MainProps {
     searchString: String,
