@@ -14,7 +14,10 @@ function App() {
   useEffect(() => {
     document.title = "nanoCLM";
     setSearchResults(getLocalData(searchString));
-  });
+  }, []);
+  useEffect(() => {
+    //TODO add POST request here
+  }, [searchString]);
   return (
     <div>
       <SearchNavbar searchString={searchString} setSearchString={setSearchString}></SearchNavbar>
