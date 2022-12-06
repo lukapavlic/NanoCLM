@@ -30,7 +30,7 @@ const SearchInput = () => {
 
     try {
       const searchResponse = await SearchDataService.create(data);
-      setSearchRes(searchResponse.data as ISearchResponse);
+      setSearchRes(searchResponse);
     } catch (error) {
       //dont know what all of the exceptions from spring are...
       console.log(error);
