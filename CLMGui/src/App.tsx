@@ -6,7 +6,7 @@ import "./assets/css/styles.css";
 import SearchNavbar from "./components/Navbar/SearchNavbar";
 import getLocalData from "./services/local_data.service";
 import Contact from "./types/contact/Contact";
-import ISearch from "./types/search/search.type";
+import ISearch from "./types/search/searchPost.type";
 import SearchDataService from "./services/search.service";
 
 function App() {
@@ -19,12 +19,10 @@ function App() {
   }, []);
   useEffect(() => {
     const data: ISearch = {
-      headers: {
-        //TODO: get from auth
-        userToken: "user@clm.com", //TODO: user must be under allowed users (in database)
-        tenantUniqueName: searchString,
-      },
-      body: { sortBy: "name" }, //TODO: check...
+      //TODO: get from auth
+      userToken: "user@clm.com", //TODO: user must be under allowed users (in database)
+      tenantUniqueName: searchString,
+      sortBy: "name", //TODO: check...
     };
 
     const fetchData = async () => {

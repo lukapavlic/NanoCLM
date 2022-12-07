@@ -1,5 +1,5 @@
 export default interface ISearchResponse {
-    results: any[];
+    results: any[]; //TODO - check props and comments
     allResults: number;
     page: number;
     pageSize: number;

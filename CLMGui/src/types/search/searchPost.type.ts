@@ -1,6 +1,10 @@
 import IFilter from "../filter/filter.type";
 
-export default interface ISearchBody {
+export default interface ISearch {
+    userToken: string;
+    tenantUniqueName: string;
+    page?: number | null;
+    pageSize?: number | null;
     searchString?: string | null;
     filters?: IFilter[] | null;
     sortBy: string;

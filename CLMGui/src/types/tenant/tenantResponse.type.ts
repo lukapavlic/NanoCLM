@@ -1,4 +1,4 @@
-export default interface ITenantRes {
+export default interface ITenantResponse {
     mongoId: string;
     title: string;
     tenantUniqueName: string;

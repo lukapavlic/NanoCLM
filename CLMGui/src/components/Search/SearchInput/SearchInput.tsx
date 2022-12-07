@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
-import ISearch from "../../../types/search/search.type";
+import ISearch from "../../../types/search/searchPost.type";
 import SearchDataService from "../../../services/search.service";
 import ISearchResponse from "../../../types/search/searchResponse.type";
 
