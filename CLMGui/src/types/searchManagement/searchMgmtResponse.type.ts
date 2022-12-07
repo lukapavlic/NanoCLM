@@ -5,7 +5,7 @@ export default interface ISearchMgmtResponse {
     searchName: string;
     publicSearchOnTenant: boolean;
     search: string;
-    filters: Array<IFilter>;
+    filters: IFilter[];
     sortBy: string;
     sortOrientation: string;
     presentation: string;
