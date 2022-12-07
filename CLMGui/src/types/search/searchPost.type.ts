@@ -6,7 +6,7 @@ export default interface ISearch {
     page?: number | null;
     pageSize?: number | null;
     searchString?: string | null;
-    filters?: IFilter[] | null;
+    filters?: Array<IFilter> | null;
     sortBy: string;
     sortOrientation?: string | null;
 }
