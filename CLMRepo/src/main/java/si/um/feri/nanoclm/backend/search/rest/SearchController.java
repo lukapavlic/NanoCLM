@@ -3,6 +3,7 @@ package si.um.feri.nanoclm.backend.search.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -76,9 +77,9 @@ public class SearchController {
         int allResults=(int)contactDao.count(new Query(),tenant);
 
         Sort sort=Sort.by(search.sortBy()).ascending();
-        if (search.sortOrientation()==si.um.feri.nanoclm.backend.search.vao.Search.SortOrientation.DESC)
+        if (search.sortOrientation()==si.um.feri.nanoclm.backend.search.vao.Search.SortOrientation.DESC) 
             sort=Sort.by(search.sortBy()).descending();
-        Query query=new Query().with(sort).with(Pageable.ofSize(pgSize).withPage(currentPg));
+        Query query=new Query().with(sort).with(Pageable.ofSize(pgSize).withPage(currentPg));//add searchString -> .addCriteria(Criteria.where("title").is(search.searchString()))
         List<Contact> ret=contactDao.find(query,Contact.class, tenant);
 
         return new SearchResult(ret,allResults,currentPg,pgSize);
