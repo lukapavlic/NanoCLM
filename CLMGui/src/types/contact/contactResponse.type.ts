@@ -2,7 +2,7 @@ export default interface IContactResponse {
     mongoId: string;
     uniqueId: string;
     title: string;
-    props: Map<string, string>;
+    props: {[key: string]: string};
     attrs: Array<string>;
-    comments: Map<string, string>;
+    comments: {[key: string]: string};
 }

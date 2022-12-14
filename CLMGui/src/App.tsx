@@ -4,14 +4,14 @@ import Main from "./components/Routing/Main";
 import { useEffect } from "react";
 import "./assets/css/styles.css";
 import SearchNavbar from "./components/Navbar/SearchNavbar";
-import getLocalData from "./services/local_data.service";
-import Contact from "./types/contact/Contact";
 import ISearch from "./types/search/searchPost.type";
 import SearchDataService from "./services/search.service";
+import IContactResponse from "./types/contact/contactResponse.type";
+import getLocalData from "./services/local_data.service";
 
 function App() {
   const [searchString, setSearchString] = React.useState<string>("");
-  const [searchResults, setSearchResults] = React.useState<Array<Contact>>([]);
+  const [searchResults, setSearchResults] = React.useState<Array<IContactResponse>>([]);
 
   useEffect(() => {
     document.title = "nanoCLM";
@@ -23,11 +23,13 @@ function App() {
       userToken: "user@clm.com", //TODO: user must be under allowed users (in database)
       tenantUniqueName: searchString,
       sortBy: "name", //TODO: check...
+      page: 0,
     };
 
     const fetchData = async () => {
       const searchResponse = await SearchDataService.create(data);
       console.log(searchResponse);
+      setSearchResults(searchResponse.results);
     };
     fetchData().catch(console.error);
   }, [searchString]);

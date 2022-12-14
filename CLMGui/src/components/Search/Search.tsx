@@ -1,13 +1,13 @@
 import { Grid } from '@mui/material';
 import React from 'react';
-import Contact from '../../types/contact/Contact';
+import IContactResponse from '../../types/contact/contactResponse.type';
 import PageWrapper from '../Util/PageWrapper';
 //import SearchInput from './SearchInput/SearchInput';
 import SearchResultsTable from './SearchResults/SearchResultsTable';
 
 interface SearchProps {
     searchString: String,
-    searchResults: Array<Contact>
+    searchResults: Array<IContactResponse>
 }
 
 const Search = (props: SearchProps) => {

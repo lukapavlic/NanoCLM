@@ -1,6 +1,6 @@
 export default interface IContact {
     title: string;
-    props: Map<string, string>;
+    props: {[key: string]: string};
     attrs: Array<string>;
-    comments: Map<string, string>;
+    comments: {[key: string]: string};
 }

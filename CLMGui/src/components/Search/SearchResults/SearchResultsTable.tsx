@@ -12,13 +12,13 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import Contact from '../../../types/contact/Contact';
 import { Chip } from '@mui/material';
 import { Stack } from '@mui/system';
+import IContactResponse from '../../../types/contact/contactResponse.type';
 
 
 
-function Row(props: { row: Contact }) {
+function Row(props: { row: IContactResponse }) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
     const handleClick = () => {
@@ -67,7 +67,7 @@ function Row(props: { row: Contact }) {
 
 interface TableProps {
     searchString: String,
-    searchResults: Contact[]
+    searchResults: Array<IContactResponse>
 }
 
 export default function SearchResultsTable(props: TableProps) {
