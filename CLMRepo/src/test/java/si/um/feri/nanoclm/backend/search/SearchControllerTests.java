@@ -94,6 +94,21 @@ class SearchControllerTests {
         Assertions.assertEquals("John 4",res.results().get(4).getTitle());
 	}
 
+    void searchSortAscendingDefaultPagination() {
+        ResponseEntity<SearchResult> ret=rest.performSearch("user@clm.com","TENANT",null,null,
+                new Search("", List.of(),"props.name", si.um.feri.nanoclm.backend.search.vao.Search.SortOrientation.ASC));
+        SearchResult res=ret.getBody();
+        Assertions.assertEquals(HttpStatus.OK,ret.getStatusCode());
+        Assertions.assertEquals(5,res.allResults());
+        Assertions.assertEquals(0,res.page());
+        Assertions.assertEquals(102,res.pageSize());
+        Assertions.assertEquals("Dummy",res.results().get(0).getTitle());
+        Assertions.assertEquals("John",res.results().get(1).getTitle());
+        Assertions.assertEquals("John 2",res.results().get(2).getTitle());
+        Assertions.assertEquals("John 3",res.results().get(3).getTitle());
+        Assertions.assertEquals("John 4",res.results().get(4).getTitle());
+    }
+
     @Test
     void searchSortDescending() {
         ResponseEntity<SearchResult> ret=rest.performSearch("user@clm.com","TENANT",0,102,

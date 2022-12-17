@@ -36,7 +36,6 @@ public class SearchController {
     @Autowired
     private MongoTemplate contactDao;
 
-    @CrossOrigin(origins = "http://localhost:3000")//TODO: remove this
     @PostMapping
     public ResponseEntity<SearchResult> performSearch(@RequestHeader("userToken") String userToken,
                                                @RequestHeader("tenantUniqueName") String tenantUniqueName,
@@ -70,7 +69,7 @@ public class SearchController {
 
     private SearchResult doSearching(Search search, String tenant, Integer page, Integer pageSize) {
         int pgSize=100;
-        int currentPg=1;
+        int currentPg=0;
         if (pageSize!=null) pgSize=pageSize.intValue();
         if (page!=null) currentPg=page.intValue();
 
@@ -79,7 +78,7 @@ public class SearchController {
         Sort sort=Sort.by(search.sortBy()).ascending();
         if (search.sortOrientation()==si.um.feri.nanoclm.backend.search.vao.Search.SortOrientation.DESC) 
             sort=Sort.by(search.sortBy()).descending();
-        Query query=new Query().with(sort).with(Pageable.ofSize(pgSize).withPage(currentPg));//add searchString -> .addCriteria(Criteria.where("title").is(search.searchString()))
+        Query query=new Query().with(sort).with(Pageable.ofSize(pgSize).withPage(currentPg));
         List<Contact> ret=contactDao.find(query,Contact.class, tenant);
 
         return new SearchResult(ret,allResults,currentPg,pgSize);
