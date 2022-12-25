@@ -9,12 +9,12 @@ on:
     paths-ignore:
     - 'CLMRepo/**'
     - '**.md'
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
     paths-ignore:
     - 'CLMRepo/**'
     - '**.md'
-    branches: [ master ]
+    branches: [ main ]
 
 defaults:
   run:
