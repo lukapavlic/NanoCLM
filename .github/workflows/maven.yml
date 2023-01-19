@@ -54,10 +54,10 @@ jobs:
       
     - name: Package JAR
     - run: mkdir staging && cp target/*.jar staging
-    - uses: actions/upload-artifact@master
+    - uses: actions/upload-artifact@v3
       with:
-        name: CLMRepo-jar
-        path: CLMRepo/staging
+         name: CLMRepo
+         path: CLMRepo/staging
    
     - name: Test with Maven
       run: mvn test --file ./pom.xml
