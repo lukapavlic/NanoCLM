@@ -14,8 +14,8 @@
 - User **search-related preferences**
 
 ## Prerequisites
-- MongoDB (dev on 4.4.2) running locally, port 27017, no user/pass (see _resources/application-dev.properties_)
-- Apache ActiveMQ (dev on 5.17.1) running locally, port 61616, no user/pass (see _resources/application-dev.properties_)
+- MongoDB (dev on 4.4.2 / 7.0.2 ARM on Mac) running locally, port 27017, no user/pass (see _resources/application-dev.properties_)
+- Apache ActiveMQ (dev on 5.17.1 / 5.18.3 on Mac) running locally, port 61616, no user/pass (see _resources/application-dev.properties_)
 
 When ObjectMessage in use (deprecated at current implementation), make sure to run 
 Apache ActiveMQ with param (see https://activemq.apache.org/objectmessage.html for details):
@@ -32,8 +32,10 @@ Apache ActiveMQ with param (see https://activemq.apache.org/objectmessage.html f
 - http://127.0.0.1:8580/api/v1/v3/api-docs
 
 
-- http://127.0.0.1:8280/api/v1/tenants
-- http://127.0.0.1:8280/api/v1/contacts
+- http://127.0.0.1:8580/api/v1/tenants
+- http://127.0.0.1:8580/api/v1/contacts
   
 - http://127.0.0.1:8161
 
+
+- Initial test data: tenant "II", user "testuser"
