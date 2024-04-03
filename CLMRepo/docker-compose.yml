@@ -11,9 +11,9 @@ services:
     clmamq:
         image: rmohr/activemq:5.15.9
         restart: always
-        ports:
-            - "8161:8161"
-            - "61616:61616"
+#        ports:
+#            - "8161:8161"
+#            - "61616:61616"
 
     clmrepo:
         build: .

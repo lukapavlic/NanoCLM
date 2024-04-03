@@ -11,7 +11,6 @@ import si.um.feri.nanoclm.backend.repo.dao.TenantRepository;
 import si.um.feri.nanoclm.backend.repo.dto.PostTenant;
 import si.um.feri.nanoclm.backend.events.jms.producer.EventNotifyer;
 import si.um.feri.nanoclm.backend.repo.vao.Contact;
-
 import java.util.Set;
 import java.util.logging.Logger;
 
